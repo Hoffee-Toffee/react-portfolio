@@ -17,4 +17,4 @@ coverage/*
 .env
 
 # Build directory
-/dist
+dist
