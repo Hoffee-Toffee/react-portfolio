@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, Link } from 'react-router-dom'
 
 export default function Layout() {
   return (
@@ -9,7 +9,7 @@ export default function Layout() {
           crossOrigin="anonymous"
         ></script>
         <h1>
-          <a href="/">Tristan Bulmer</a>
+          <Link to="/">Tristan Bulmer</Link>
         </h1>
 
         <input type="checkbox" id="nav-toggle" />
@@ -22,16 +22,19 @@ export default function Layout() {
         <nav>
           <ul>
             <li>
-              <a href="../home/home.html">Home</a>
+              <Link to="/">Home</Link>
             </li>
             <li>
-              <a href="../interests/interests.html">Interests</a>
+              <Link to="/">Home</Link>
             </li>
             <li>
-              <a href="../blog/blog.html">Blog</a>
+              <Link to="/interests">Interests</Link>
             </li>
             <li>
-              <a href="../projects/projects.html">Projects</a>
+              <Link to="/blog">Blog</Link>
+            </li>
+            <li>
+              <Link to="/projects">Projects</Link>
             </li>
           </ul>
         </nav>
