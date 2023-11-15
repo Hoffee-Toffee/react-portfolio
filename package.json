@@ -9,11 +9,11 @@
   ],
   "scripts": {
     "test": "vitest",
-    "start": "node server/index.js",
+    "start": "node dist/server.js",
     "dev": "run-p dev:client dev:server",
     "dev:client": "vite",
     "dev:server": "tsx watch server/index.ts",
-    "build": "npm-run-all --parallel build:client build:server",
+    "build": "npm run build:client && npm run build:server",
     "build:client": "vite build",
     "build:server": "esbuild --packages=external --platform=node --format=esm --outfile=dist/server.js --bundle server/index.ts",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
