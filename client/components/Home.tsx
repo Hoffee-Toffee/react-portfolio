@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useFruits } from '../hooks/useFruits.js'
 import '../styles/home.css'
+import '../styles/blog.css'
 
 function App() {
   const { data } = useFruits()
@@ -193,8 +194,8 @@ function App() {
         <h2>I am currently working on...</h2>
         <ul>
           <li>
-            A <Link to="/supe-game">superhero fighting game</Link> and a
-            website for it
+            A <Link to="/supe-game">superhero fighting game</Link> and a website
+            for it
           </li>
           <li>This portfolio website</li>
           <li>

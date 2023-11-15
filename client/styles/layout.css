@@ -47,14 +47,14 @@
   font-family: 'Russell Square';
   font-weight: 100;
   font-style: normal;
-  src: url('RusselSquareOpti.otf') format('opentype');
+  src: url('../fonts/RusselSquareOpti.otf') format('opentype');
 }
 
 @font-face {
   font-family: 'Unitology';
   font-weight: 100;
   font-style: normal;
-  src: url('DeadSpace.ttf') format('opentype');
+  src: url('../fonts/DeadSpace.ttf') format('opentype');
 }
 
 h1,
