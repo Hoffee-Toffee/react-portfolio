@@ -45,8 +45,7 @@ export default function Layout() {
 
       <footer>
         <span>
-          <a href="https://www.github.com/Hoffee-Toffee">Tristan Bulmer</a>
-          2023
+          <a href="https://www.github.com/Hoffee-Toffee">Tristan Bulmer</a> 2023
         </span>
       </footer>
     </>
