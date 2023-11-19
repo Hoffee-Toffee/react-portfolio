@@ -1,5 +1,5 @@
 export default function InterestSection(props) {
-  const { id, content } = props
+  const { index, id, content } = props
   return (
     <div id={id} className="interest">
       {content}
