@@ -289,7 +289,11 @@ export default function Interests() {
           <i className="fa fa-chevron-down" aria-hidden="true"></i>
         </span>
       </div>
-      {interests.map((interest, index) => ({...interest, props: {...interest.props, index}}))}
+      {interests.map((interest, index) => ({
+        ...interest,
+        props: { ...interest.props, index },
+        key: `Interest ${index + 1}`,
+      }))}
       <div className="title-card" id="interests-end">
         <div className="content">
           <h1>End of Interests</h1>

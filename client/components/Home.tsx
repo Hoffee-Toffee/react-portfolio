@@ -421,6 +421,7 @@ function process(sneezeData) {
       <li
         className={classes.join(' ')}
         date={thisDate.toDateString()}
+        key={thisDate.toDateString()}
         record={
           thisData ? `${count} sneeze${count == 1 ? '' : 's'}` : 'No record'
         }
@@ -458,6 +459,7 @@ function process(sneezeData) {
       <li
         className={classes.join(' ')}
         date={thisDate.toDateString()}
+        key={thisDate.toDateString()}
         record={
           thisData ? `${count} sneeze${count == 1 ? '' : 's'}` : 'No record'
         }
