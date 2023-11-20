@@ -1,5 +1,5 @@
 import { Outlet, Link } from 'react-router-dom'
-import { useWindowScroll, useWindowSize, useMeasure } from '@uidotdev/usehooks'
+import { useWindowScroll, useWindowSize } from '@uidotdev/usehooks'
 
 import '../styles/layout.css'
 
