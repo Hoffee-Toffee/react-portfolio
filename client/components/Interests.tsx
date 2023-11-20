@@ -1,9 +1,15 @@
 /* eslint-disable react/jsx-key */
 import { Link } from 'react-router-dom'
 import InterestSection from './InterestSection'
-import '../styles/interests.css'
+import { useEffect } from 'react'
+import '../styles/interests.scss'
 
 export default function Interests() {
+  useEffect(() => {
+    document.title = 'Tristan Bulmer | Interests'
+    document.body.parentElement.id = 'interestsPage'
+  }, [])
+
   const interests = [
     <InterestSection
       id="dead-space"
@@ -126,7 +132,9 @@ export default function Interests() {
           <div id="tetronimos">
             <div className="fg-img" id="l-block"></div>
             <div className="fg-img" id="o-block"></div>
-            <div className="fg-img" id="s-block"></div>
+            <Link to="/secret">
+              <div className="fg-img" id="s-block"></div>
+            </Link>
             <div className="fg-img" id="t-block"></div>
           </div>
 

@@ -1,9 +1,15 @@
 import { Link } from 'react-router-dom'
 import { useFruits } from '../hooks/useFruits.js'
-import '../styles/home.css'
-import '../styles/blog.css'
+import '../styles/home.scss'
+import '../styles/blog.scss'
+import { useEffect } from 'react'
 
 function Home() {
+  useEffect(() => {
+    document.title = 'Tristan Bulmer | Home'
+    document.body.parentElement.id = 'homePage'
+  }, [])
+
   const { data, isError, isLoading } = useFruits()
 
   if (!data || isError || isLoading) {
