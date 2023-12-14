@@ -1,7 +1,7 @@
-import { useFruits } from '../hooks/useFruits.ts'
+import { useSneezes } from '../hooks/useSneezes.ts'
 
 function App() {
-  const { data } = useFruits()
+  const { data } = useSneezes()
 
   return (
     <>
