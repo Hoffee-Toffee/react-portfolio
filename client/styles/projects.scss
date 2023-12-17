@@ -123,8 +123,9 @@ html#projectsPage {
   .project iframe {
     /* Don't stretch when resizing to fill */
     object-fit: contain;
-    width: calc(100% - 2em);
-    height: 8em;
+    height: 100%;
+    max-height: 8em;
+    max-width: calc(100% - 2em);
     border: solid 1px white;
     margin-bottom: 1em;
   }

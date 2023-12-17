@@ -10,53 +10,50 @@ export default function ProjectsPage() {
 
   const { data, isError, isLoading } = useProjects()
 
-  if (!data || isError || isLoading) {
-    return (
-      <div id="loading-projects" className="loading">
+  const { repos, me } = data || { repos: {}, me: '' }
+
+  return (
+    <>
+      <h1>Featured Projects</h1>
+
+      <div id="loading-projects" className={isLoading ? 'loading' : 'loaded'}>
         <div className="lds-ripple">
           <div></div>
           <div></div>
         </div>
         <span className="scanline"></span>
       </div>
-    )
-  }
-
-  const { repos, me } = data
-
-  return (
-    <>
-      <h1>Featured Projects</h1>
 
       <div id="featured" className="projects">
-        {repos.featured.map((repo) => (
+        {repos.featured?.map((repo) => (
           <div id={repo.name} key={repo.name} className="project">
             <h3>{repo.name}</h3>
             <p>{repo.description}</p>
+            <img
+              src={`https://raw.githubusercontent.com/${me}/${repo.name}/main/screenshot.png`}
+              alt={`Screenshot of ${repo.name}`}
+              onError={(e) => (e.target.style.display = 'none')}
+            />
             <div className="project-links">
               <a href={repo.html_url} target="_blank" rel="noreferrer">
                 View Repo
               </a>
               <a
-                href={`/${repo.name}/index.html`}
+                href={`/${repo.name == 'react-portfolio' ? '' : repo.name}`}
                 target="_blank"
                 rel="noreferrer"
               >
                 Run Repo
               </a>
-              <img
-                src={`https://raw.githubusercontent.com/${me}/${repo.name}/main/screenshot.png`}
-                alt={`Screenshot of ${repo.name}`}
-              />
             </div>
           </div>
         ))}
       </div>
 
-      <h1>Other Repositories</h1>
+      {repos.other && <h1>Other Repositories</h1>}
 
       <div id="other" className="projects">
-        {repos.other.map((repo) => (
+        {repos.other?.map((repo) => (
           <a
             id={repo.name}
             key={repo.name}

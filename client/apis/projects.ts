@@ -5,7 +5,10 @@ const me = 'Hoffee-Toffee'
 
 export async function getProjects(): Promise<string[]> {
   const featured = await getStarred()
-  const other = await getOwnedRepos()
+  const owned = await getOwnedRepos()
+
+  const names = featured.map((repo) => repo.name)
+  const other = owned.filter((repo) => !names.includes(repo.name))
 
   return {
     me,

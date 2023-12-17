@@ -1,10 +1,22 @@
 import { Link } from 'react-router-dom'
 import { useSneezes } from '../hooks/useSneezes.js'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import '../styles/home.scss'
 import '../styles/blog.scss'
 
 function Home() {
+  // Now
+  const now = new Date()
+  const monthStart = new Date(
+    now
+      .toDateString()
+      .split(' ')
+      .filter((_, i) => i % 2)
+      .join(' '),
+  )
+
+  const [view, setView] = useState(monthStart)
+
   useEffect(() => {
     document.title = 'Tristan Bulmer | Home'
     document.body.parentElement.id = 'homePage'
@@ -17,7 +29,18 @@ function Home() {
   }
 
   const { count, updated, calendar } = data
-  const { yearSquares, monthSquares } = process(data)
+  // Find the record setter of sneezes
+  let record = Object.keys(calendar)[0]
+  let total = calendar[record].count
+
+  Object.keys(calendar).forEach((day) => {
+    if (calendar[day].count > total) {
+      record = day
+      total = calendar[day].count
+    }
+  })
+
+  const { yearSquares, monthSquares } = process(data, view, record)
 
   // Started
   const started = new Date(
@@ -26,9 +49,6 @@ function Home() {
 
   // Updated
   const updatedDate = new Date(updated)
-
-  // Now
-  const now = new Date()
 
   // Ms since count start
   const msAgo = new Date() - started
@@ -60,6 +80,21 @@ function Home() {
 
   // Data processing
   // let processed = sneezeCalc(data)
+
+  function changeView(change) {
+    const copy = view
+
+    switch (change[1]) {
+      case 'y':
+        copy.setFullYear(copy.getFullYear() + (change[0] == '+' ? 1 : -1))
+        break
+
+      case 'm':
+        copy.setMonth(copy.getMonth() + (change[0] == '+' ? 1 : -1))
+        break
+    }
+    setView(new Date(copy.toDateString()))
+  }
 
   return (
     <div id="main">
@@ -117,9 +152,9 @@ function Home() {
             </ul>
             <ul className="squares">{yearSquares}</ul>
             <div className="switch">
-              <a>{`<`}</a>
-              <h3 className="date"></h3>
-              <a>{`>`}</a>
+              <a onClick={() => changeView('-y')}>{`<`}</a>
+              <h3 className="date">{view.getFullYear()}</h3>
+              <a onClick={() => changeView('+y')}>{`>`}</a>
             </div>
           </div>
           <div className="graph monthly">
@@ -134,9 +169,11 @@ function Home() {
             </ul>
             <ul className="squares">{monthSquares}</ul>
             <div className="switch">
-              <a>{`<`}</a>
-              <h3 className="date"></h3>
-              <a>{`>`}</a>
+              <a onClick={() => changeView('-m')}>{`<`}</a>
+              <h3 className="date">
+                {view.toDateString().split(' ')[1]} {view.getFullYear()}
+              </h3>
+              <a onClick={() => changeView('+m')}>{`>`}</a>
             </div>
           </div>
           <div className="key">
@@ -339,17 +376,16 @@ function nextMilestone(level, count) {
   return round == count ? count + milestone : round
 }
 
-function process(sneezeData) {
+function process(sneezeData, view, record) {
   // Get first and last entry to get the bounds
   const firstEntry = Object.keys(sneezeData.calendar)[0]
   const lastEntry = Object.keys(sneezeData.calendar)[
     Object.keys(sneezeData.calendar).length - 1
   ]
 
-  // Get / Set which page to be on
-  const today = new Date()
+  // Get which page to be on
   const monthStart = new Date(
-    today
+    view
       .toDateString()
       .split(' ')
       .filter((_, i) => i % 2)
@@ -360,45 +396,6 @@ function process(sneezeData) {
 
   const yearOffset = yearStart.getDay()
   const monthOffset = monthStart.getDay()
-
-  // Set names check if buttons should be toggled
-  // const yearlySwitch = document.querySelector('.yearly .switch')
-  // const monthlySwitch = document.querySelector('.monthly .switch')
-
-  // yearlySwitch.children[0].title = `${yearStart.getFullYear() - 1}`
-  // yearlySwitch.children[1].innerHTML = yearStart.getFullYear()
-  // yearlySwitch.children[2].title = `${yearStart.getFullYear() + 1}`
-
-  // Loop over the switch anchors, giving them an onclick function
-  // document
-  //   .querySelectorAll('.switch a')
-  //   .forEach((tag) => tag.addEventListener('click', calendarChange))
-
-  monthStart.setMonth(monthStart.getMonth() - 1)
-
-  // monthlySwitch.children[0].title = `${monthStart
-  //   .toDateString()
-  //   .split(' ')
-  //   .filter((_, i) => i % 2)
-  //   .join(' ')}`
-
-  monthStart.setMonth(monthStart.getMonth() + 1)
-
-  // monthlySwitch.children[1].innerHTML = `${monthStart
-  //   .toDateString()
-  //   .split(' ')
-  //   .filter((_, i) => i % 2)
-  //   .join(' ')}`
-
-  monthStart.setMonth(monthStart.getMonth() + 1)
-
-  // monthlySwitch.children[2].title = `${monthStart
-  //   .toDateString()
-  //   .split(' ')
-  //   .filter((_, i) => i % 2)
-  //   .join(' ')}`
-
-  monthStart.setMonth(monthStart.getMonth() - 1)
 
   const yearSquares = []
   const monthSquares = []
@@ -421,6 +418,12 @@ function process(sneezeData) {
       count = thisData ? thisData.count : 0
       level = count2Level(count)
       if (!thisData || thisData.confirmed == false) classes.push('unconfirmed')
+      if (
+        thisData &&
+        thisData.confirmed &&
+        thisDate.toLocaleDateString('en-NZ') == record
+      )
+        classes.push('record')
     }
 
     yearSquares.push(
@@ -434,7 +437,9 @@ function process(sneezeData) {
         extra={
           thisData && thisData.count > 0 && !thisData.confirmed
             ? '(Unconfirmed)'
-            : ''
+            : classes.includes('record')
+              ? '(Record Holder)'
+              : ''
         }
         data-level={level}
       ></li>,
@@ -459,6 +464,12 @@ function process(sneezeData) {
       count = thisData ? thisData.count : 0
       level = count2Level(count)
       if (!thisData || thisData.confirmed == false) classes.push('unconfirmed')
+      if (
+        thisData &&
+        thisData.confirmed &&
+        thisDate.toLocaleDateString('en-NZ') == record
+      )
+        classes.push('record')
     }
 
     monthSquares.push(
@@ -472,7 +483,9 @@ function process(sneezeData) {
         extra={
           thisData && thisData.count > 0 && !thisData.confirmed
             ? '(Unconfirmed)'
-            : ''
+            : classes.includes('record')
+              ? '(Record Holder)'
+              : ''
         }
         data-level={level}
       ></li>,

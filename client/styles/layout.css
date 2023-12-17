@@ -80,6 +80,21 @@ h4 {
   }
 }
 
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+}
+
 @keyframes scanline {
   0% {
     left: -10px;
@@ -465,8 +480,12 @@ nav a:hover,
 header h1 a:hover,
 footer a:hover {
   color: var(--color-green-light) !important;
-  text-shadow: 2px 2px 0px #00000088, 0px 0px 10px #44444477,
-    0px 0px 20px #88888866, 0px 0px 30px #cccccc55, 0px 0px 40px #ffffff44;
+  text-shadow:
+    2px 2px 0px #00000088,
+    0px 0px 10px #44444477,
+    0px 0px 20px #88888866,
+    0px 0px 30px #cccccc55,
+    0px 0px 40px #ffffff44;
 }
 
 /* ===== ---------- ===== */
@@ -547,12 +566,18 @@ footer span::before {
 /* =====   LOADING SYMBOL   ===== */
 /* ===== ------------------ ===== */
 
-.loading {
+.loading,
+.loaded {
   transition-duration: 0.5s;
   /* Be in the mid of the screen (horizontaly) */
   position: absolute;
   left: calc(50vw - 50px);
   top: calc(50vh - 50px);
+}
+
+.loaded {
+  opacity: 0;
+  animation: fadeout 1s;
 }
 
 .lds-ripple {

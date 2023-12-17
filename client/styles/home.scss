@@ -200,10 +200,19 @@ html#homePage {
     display: none;
   }
 
+  .squares li.record {
+    border: 1px solid black;
+    outline: 1px solid var(--color-orange-lightest);
+  }
+
   .squares li:not([data-level='0']):hover {
     border: 1px solid black;
     outline: 1px solid white;
     transition: border-color 0.25s 0.1s outline-color 0.25s 0.1s;
+  }
+
+  .squares li.record:not([data-level='0']):hover {
+    outline: 2px solid gold;
   }
 
   .squares li:not([data-level='0'])::after {
@@ -221,6 +230,12 @@ html#homePage {
     margin-top: 1em;
     transform: translateX(-50%);
   }
+
+  .squares li.record:not([data-level='0'])::after {
+    background: var(--color-orange-darkest);
+    border: 1px solid gold;
+  }
+
 
   .squares li:not([data-level='0']):hover::after {
     opacity: 1;
