@@ -6,9 +6,9 @@ const router = Router()
 
 router.get('/', async (req, res) => {
   try {
-    const sneezeData = await db.getSneezeData()
+    const projectData = await db.getProjectData()
 
-    res.json(sneezeData)
+    res.json(projectData)
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: 'Something went wrong' })

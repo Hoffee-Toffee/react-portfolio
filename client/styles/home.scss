@@ -5,6 +5,39 @@
 }
 
 html#homePage {
+  #top-box {
+    display: flex;
+    margin-top: 1em;
+    width: 100%;
+  }
+
+  #me {
+    border: 3px solid black;
+    outline: 0.5em solid var(--color-blue);
+    border-radius: calc(1em / 0);
+    border-bottom-right-radius: 0;
+    width: 25vw;
+    height: 25vw;
+    max-width: 15em;
+    max-height: 15em;
+    margin-left: 1em;
+    margin-right: 2em;
+    margin-bottom: 1.5em;
+    align-self: end;
+  }
+
+  main h1 {
+    margin: 0;
+    margin-bottom: -0.5em;
+  }
+
+  #right-col {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: space-between;
+  }
+
   /* ===== ------------------ ===== */
   /* =====   SNEEZE COUNTER   ===== */
   /* ===== ------------------ ===== */
@@ -236,7 +269,6 @@ html#homePage {
     border: 1px solid gold;
   }
 
-
   .squares li:not([data-level='0']):hover::after {
     opacity: 1;
     margin-top: 1.5em;
@@ -285,6 +317,36 @@ html#homePage {
 
     .graph.monthly {
       display: none;
+    }
+  }
+
+  @media screen and (max-width: 700px) {
+    #top-box {
+      position: relative;
+    }
+
+    #right-col {
+      width: 100%;
+
+      ul {
+        width: calc(100% - 25vw - 5.5em);
+        align-self: flex-end;
+        margin-right: 0.5em;
+      }
+    }
+
+    #me {
+      position: absolute;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    #me {
+      display: none;
+    }
+
+    #right-col ul {
+      width: 100%;
     }
   }
 }

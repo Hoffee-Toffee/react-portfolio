@@ -10,11 +10,49 @@ export default function ProjectsPage() {
 
   const { data, isError, isLoading } = useProjects()
 
-  const { repos, me } = data || { repos: {}, me: '' }
+  const { repos, me, info } = data || { repos: {}, me: '', info: {} }
+
+  console.log(info)
+
+  function projectCard(repo) {
+    return (
+      <div id={repo.name} key={repo.name} className="project">
+        <h3>{repo.name}</h3>
+        <p>{repo.description}</p>
+        <img
+          src={`https://raw.githubusercontent.com/${me}/${repo.name}/main/screenshot.png`}
+          alt={`Screenshot of ${repo.name}`}
+          onError={(e) => e.target.classList.add('hidden')}
+        />
+        <video
+          src={`https://raw.githubusercontent.com/${me}/${repo.name}/main/demo.mp4`}
+          onError={(e) => e.target.classList.add('hidden')}
+          controls
+        />
+        <div className="project-links">
+          <a href={repo.html_url} target="_blank" rel="noreferrer">
+            View Repo
+          </a>
+          <a
+            href={`/${repo.name == 'react-portfolio' ? '' : repo.name}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Run Repo
+          </a>
+          {info[repo.node_id] && (
+            <a href={'/projects/' + repo.node_id} rel="noreferrer">
+              Project Blog
+            </a>
+          )}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <>
-      <h1>Featured Projects</h1>
+      {repos.featured && <h1>Featured Projects</h1>}
 
       <div id="loading-projects" className={isLoading ? 'loading' : 'loaded'}>
         <div className="lds-ripple">
@@ -25,29 +63,13 @@ export default function ProjectsPage() {
       </div>
 
       <div id="featured" className="projects">
-        {repos.featured?.map((repo) => (
-          <div id={repo.name} key={repo.name} className="project">
-            <h3>{repo.name}</h3>
-            <p>{repo.description}</p>
-            <img
-              src={`https://raw.githubusercontent.com/${me}/${repo.name}/main/screenshot.png`}
-              alt={`Screenshot of ${repo.name}`}
-              onError={(e) => (e.target.style.display = 'none')}
-            />
-            <div className="project-links">
-              <a href={repo.html_url} target="_blank" rel="noreferrer">
-                View Repo
-              </a>
-              <a
-                href={`/${repo.name == 'react-portfolio' ? '' : repo.name}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Run Repo
-              </a>
-            </div>
-          </div>
-        ))}
+        {repos.featured?.map((repo) => projectCard(repo))}
+      </div>
+
+      {repos.projects && <h1>Other Projects</h1>}
+
+      <div id="projects" className="projects">
+        {repos.projects?.map((repo) => projectCard(repo))}
       </div>
 
       {repos.other && <h1>Other Repositories</h1>}

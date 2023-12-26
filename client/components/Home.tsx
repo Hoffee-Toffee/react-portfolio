@@ -98,7 +98,7 @@ function Home() {
 
   return (
     <div id="main">
-      <div id="sneezeBox">
+      {/* <div id="sneezeBox">
         <div className="card">
           <h1>
             <span id="holo">
@@ -225,9 +225,28 @@ function Home() {
             </b>
           </p>
         </div>
-      </div>
+      </div> */}
       <div id="content">
-        <h1>Welcome to my portfolio!</h1>
+        <div id="top-box">
+          <img id="me" src="/client/images/Me.png" alt="Me" />
+          <div id="right-col">
+            <h1>Welcome to my portfolio!</h1>
+            <ul>
+              <li>
+                <a href="https://github.com/Hoffee-Toffee">GitHub</a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/tristan-bulmer">LinkedIn</a>{' '}
+              </li>
+              <li>
+                <a href="/client/files/Tristan Bulmer CV.pdf">CV</a>{' '}
+              </li>
+              <li>
+                <a href="mailto:tb59391@gmail.com">Email Me</a>
+              </li>
+            </ul>
+          </div>
+        </div>
 
         <p>
           I'm studying at <a href="https://devacademy.co.nz/">Dev Academy</a>,
@@ -251,53 +270,9 @@ function Home() {
         </p>
 
         <p>
-          Most of my programming experience is in web development, but I am
-          getting bit into game development via my Supe Game project.
-          <br />
-          I have experience with HTML, CSS, JavaScript, PHP, Python, SQL,
-          Node.js, and AutoHotKey.
-          <br />
-          The languages I am most familiar with are HTML, CSS, JavaScript, and
-          Python.
-          <br />
-          Python was my first language, but I don't use it as much as I used to.
-          <br />
-          I have some experience with PHP and SQL, and am currently getting back
-          into SQL for some of my projects.
-          <br />
+          WIP - The rest of this section is currently being re-written. This
+          placeholder text is simply replacing the now outdated information.
         </p>
-
-        <h2>Things I have made in the past include...</h2>
-        <ul>
-          <li>Countless python scripts (text games, web scrapers, etc.)</li>
-          <li>
-            Two Discord bots (one with a bunch of silly commands and features,
-            and one that I used to manage and control my Minecraft server)
-          </li>
-          <li>
-            A few websites (most are terrible from when I was starting out and
-            messing around)
-          </li>
-        </ul>
-
-        <p>
-          Most of my previous projects are not yet on github, but I plan to add
-          them soon.
-        </p>
-
-        <h2>I am currently working on...</h2>
-        <ul>
-          <li>
-            A <Link to="/supe-game">superhero fighting game</Link> and a website
-            for it
-          </li>
-          <li>This portfolio website</li>
-          <li>
-            A <Link to="/supedb">wiki</Link>, with added timeline tools, for
-            visualising the connections between people, events, objects and
-            concepts in stories
-          </li>
-        </ul>
       </div>
     </div>
   )

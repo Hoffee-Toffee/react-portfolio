@@ -1,19 +1,25 @@
 import request from 'superagent'
 
 const githubAPI = 'https://api.github.com'
+const rootUrl = '/api/v1'
 const me = 'Hoffee-Toffee'
 
 export async function getProjects(): Promise<string[]> {
-  const featured = await getStarred()
+  const starred = await getStarred()
   const owned = await getOwnedRepos()
+  const info = await getRepoInfo()
 
-  const names = featured.map((repo) => repo.name)
+  const names = starred.map((repo) => repo.name)
+  const projects = starred.filter((repo) => !info[repo.node_id])
   const other = owned.filter((repo) => !names.includes(repo.name))
+  const featured = starred.filter((repo) => info[repo.node_id])
 
   return {
     me,
+    info,
     repos: {
       featured,
+      projects,
       other,
     },
   }
@@ -39,4 +45,8 @@ export async function getOwnedRepos(): Promise<string[]> {
   return ownedRepos
 }
 
-//https://api.github.com/users/Hoffee-Toffee/repos
+export async function getRepoInfo(): Promise<string[]> {
+  const response = await request.get(rootUrl + '/projects')
+
+  return await response.body
+}

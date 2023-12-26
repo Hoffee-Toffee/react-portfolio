@@ -2,12 +2,14 @@ import express from 'express'
 import * as Path from 'node:path'
 
 import sneezeRoutes from './routes/sneezes.ts'
+import projectRoutes from './routes/projects.ts'
 
 const server = express()
 
 server.use(express.json())
 
 server.use('/api/v1/sneezes', sneezeRoutes)
+server.use('/api/v1/projects', projectRoutes)
 
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))

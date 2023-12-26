@@ -1,0 +1,16 @@
+[submodule "OmniFocus"]
+	path = projects/OmniFocus
+	url = https://github.com/fstevens30/OmniFocus
+[submodule "Dead-Space"]
+	path = projects/Dead-Space
+	url = https://github.com/Hoffee-Toffee/Dead-Space.git
+	branch = main
+[submodule "supe-game"]
+	path = projects/supe-game
+	url = https://github.com/Hoffee-Toffee/supe-game.git
+[submodule "supedb"]
+	path = projects/supedb
+	url = https://github.com/Hoffee-Toffee/supedb.git
+[submodule "datacord"]
+	path = projects/datacord
+	url = https://github.com/Hoffee-Toffee/datacord.git

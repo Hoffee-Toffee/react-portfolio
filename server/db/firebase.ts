@@ -7,3 +7,11 @@ export async function getSneezeData(): Promise<SneezeData[]> {
   const doc = docSnap.docs.find((doc) => doc.id == 'sneezeData')
   return JSON.parse(doc.data().data)
 }
+
+export async function getProjectData(): Promise<string[]> {
+  const docRef = firebase.collection(firebase.portfolio, 'projects')
+  const docSnap = await firebase.getDocs(docRef)
+  const docs = {}
+  docSnap.docs.forEach((doc) => (docs[doc.id] = doc.data()))
+  return docs
+}
