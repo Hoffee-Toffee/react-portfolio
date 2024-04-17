@@ -43,9 +43,12 @@ html#homePage {
   /* ===== ------------------ ===== */
 
   #sneezeBox {
-    top: -3em;
     padding-top: 1em;
     position: relative;
+
+    h1 {
+      padding: 1em 0;
+    }
   }
 
   .card {

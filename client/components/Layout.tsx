@@ -1,30 +1,14 @@
 import { Outlet, Link } from 'react-router-dom'
-import { useWindowScroll, useWindowSize } from '@uidotdev/usehooks'
+import useScroll from '../hooks/useScroll.ts'
 
 import '../styles/layout.css'
 
 export default function Layout() {
-  let [{ y: scroll }] = useWindowScroll()
-  let { height: screen } = useWindowSize()
-
-  scroll = scroll || 0
-  screen = screen || 0
-  const margin = 100
-
-  // Make the header fade out as the user scrolls down the page
-  const headerStyles = {
-    opacity: 1 - scroll / margin,
-    pointerEvents: 1 - scroll / margin > 0.5 ? 'auto' : 'none',
-  }
-
-  const footerStyles = {
-    opacity: (30 + scroll - window.innerHeight - margin) / margin,
-    pointerEvents: screen - scroll / margin > 0.5 ? 'auto' : 'none',
-  }
+  useScroll()
 
   return (
     <>
-      <header style={headerStyles}>
+      <header>
         <script
           src="https://kit.fontawesome.com/251912c541.js"
           crossOrigin="anonymous"
@@ -62,7 +46,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer style={footerStyles}>
+      <footer style={{ opacity: 0, pointerEvents: 'none' }}>
         <span>
           <a href="https://www.github.com/Hoffee-Toffee">Tristan Bulmer</a> 2023
         </span>
