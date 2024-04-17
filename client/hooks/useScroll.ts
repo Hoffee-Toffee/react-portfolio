@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import parallax from './useParallax.ts'
 
 const useScroll = () => {
   const location = useLocation()
@@ -14,6 +15,9 @@ const useScroll = () => {
       : window
 
     const handleScroll = () => {
+      // Update interests parallax if on that page
+      parallax()
+
       // Close menu on scroll
       document.getElementById('nav-toggle').checked = false
 
