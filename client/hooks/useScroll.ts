@@ -7,7 +7,8 @@ const useScroll = () => {
 
   useEffect(() => {
     // Close menu after navigating to a new page
-    document.getElementById('nav-toggle').checked = false
+    if (document.getElementById('nav-toggle'))
+      document.getElementById('nav-toggle').checked = false
 
     const onInterests = location.pathname === '/interests'
     const scrollingBody = onInterests
@@ -16,8 +17,10 @@ const useScroll = () => {
 
     const handleScroll = () => {
       // Update interests parallax if on that page
-      parallax()
+      if (onInterests) parallax()
 
+      // Don't update if on the secret page
+      if (location.pathname == '/secret') return
       // Close menu on scroll
       document.getElementById('nav-toggle').checked = false
 
