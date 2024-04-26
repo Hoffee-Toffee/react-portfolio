@@ -7,3 +7,6 @@
 [submodule "projects/supedb"]
 	path = projects/supedb
 	url = https://github.com/Hoffee-Toffee/supedb.git
+[submodule "projects/Datacord"]
+	path = projects/Datacord
+	url = https://github.com/Hoffee-Toffee/Datacord
