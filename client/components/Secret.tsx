@@ -5,21 +5,22 @@ import { guessSecret } from '../apis/secrets.ts'
 export default function SecretPage() {
   useEffect(() => {
     document.title = 'Tristan Bulmer | ???'
-    document.body.parentElement.id = 'secretPage'
+    if (document?.body?.parentElement)
+      document.body.parentElement.id = 'secretPage'
+    setup()
   }, [])
 
-  window.onload = () => {
+  function setup() {
     const input = document.getElementsByTagName('input')[0]
 
     input.addEventListener('keydown', async (e) => {
-      console.log(e)
       const char = e.key.toUpperCase()
       if (!new RegExp(/^[A-Z0-9 ]+$/).test(char)) {
         e.preventDefault()
         const current = document.getElementsByClassName('caret')[0]
         current.classList.add('shake')
 
-        const test = setTimeout(() => {
+        setTimeout(() => {
           current.classList.remove('shake')
         }, 1000)
       }
@@ -29,10 +30,10 @@ export default function SecretPage() {
     })
 
     input.addEventListener('keyup', async (e) => {
-      if (e.key.startsWith('Arrow')) inputFunc(e)
+      if (e.key.startsWith('Arrow')) inputFunc()
     })
 
-    input.addEventListener('input', (e) => inputFunc(e))
+    input.addEventListener('input', () => inputFunc())
     input.addEventListener('paste', (e) => e.preventDefault())
     input.addEventListener('cut', (e) => e.preventDefault())
     input.addEventListener('mousemove', (e) => e.preventDefault())
@@ -42,8 +43,7 @@ export default function SecretPage() {
     const spans =
       document.getElementsByTagName('header')[0].children[0].children
     Array.from(spans).forEach((span, i) => {
-      span.addEventListener('click', (e) => {
-        console.log('Running')
+      span.addEventListener('click', () => {
         input.focus()
         input.selectionStart = i - 1
         input.selectionEnd = i - 1
@@ -59,7 +59,11 @@ export default function SecretPage() {
 
     Array.from(spans).forEach((span, i) => {
       span.innerHTML = input.value[i - 1] || ''
-      span.classList = input.selectionStart == i - 1 ? 'caret' : ''
+      if (span.classList.contains('caret')) span.classList.remove('caret')
+
+      if (input.selectionStart == i - 1) {
+        span.classList.add('caret')
+      }
     })
 
     if (input.value.length == 7) {
@@ -67,22 +71,35 @@ export default function SecretPage() {
 
       const result = await check(input.value.toUpperCase())
 
-      input.parentElement.parentElement.classList.add(
+      input?.parentElement?.parentElement?.classList.add(
         result ? 'green' : 'shake',
       )
-      const test = setTimeout(() => {
+      setTimeout(() => {
         if (result) {
           window.location.href = result
         }
 
-        input.parentElement.parentElement.classList.remove(
+        input?.parentElement?.parentElement?.classList.remove(
           result ? 'green' : 'shake',
         )
-        input.value = null
-        input.readOnly = false
-
-        inputFunc()
       }, 1000)
+
+      // Remove a letter every 0.25 seconds, then set readOnly to false
+      // input.value = ''
+      // input.readOnly = false
+
+      input.value.split('').forEach((_, i) => {
+        setTimeout(
+          () => {
+            input.value = input.value.slice(0, i)
+            inputFunc()
+            if (!i) {
+              input.readOnly = false
+            }
+          },
+          (7 - i) * ((result ? 10 : 5) * (8 - i)) + 750 + (result ? 1000 : 0),
+        )
+      })
     }
   }
 
@@ -97,7 +114,7 @@ export default function SecretPage() {
     <>
       <header>
         <div>
-          <input type="text" autoFocus maxLength="7" />
+          <input type="text" maxLength={7} />
           <span></span>
           <span></span>
           <span></span>

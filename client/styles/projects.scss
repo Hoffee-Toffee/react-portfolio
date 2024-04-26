@@ -146,6 +146,11 @@ html#projectsPage {
     max-width: 450px;
     height: 2em;
     margin-bottom: 1em;
+
+    a[aria-disabled] {
+      pointer-events: none;
+      filter: grayscale(100%);
+    }
   }
 
   .project-links a {

@@ -12,8 +12,6 @@ export default function ProjectsPage() {
 
   const { repos, me, info } = data || { repos: {}, me: '', info: {} }
 
-  console.log(info)
-
   function projectCard(repo) {
     return (
       <div id={repo.name} key={repo.name} className="project">
@@ -33,15 +31,13 @@ export default function ProjectsPage() {
           <a href={repo.html_url} target="_blank" rel="noreferrer">
             View Repo
           </a>
-          <a
-            href={`/${repo.name == 'react-portfolio' ? '' : repo.name}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Run Repo
-          </a>
-          {info[repo.node_id] && (
-            <a href={'/projects/' + repo.node_id} rel="noreferrer">
+          {repo.hosted && (
+            <a href={`projects/${repo.name}/`} target="_blank" rel="noreferrer">
+              Run Repo
+            </a>
+          )}
+          {repo.article && (
+            <a href={'/blog/' + repo.name} rel="noreferrer">
               Project Blog
             </a>
           )}

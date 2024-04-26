@@ -1,0 +1,459 @@
+input {
+    border: none;
+    font-size: inherit;
+    background-color: transparent;
+    text-align: center;
+    margin-right: 0;
+    padding: 0;
+}
+
+.sub input {
+    color: var(--col-txt);
+}
+
+.addLink {
+    padding: 1em;
+    background-color: var(--col-txt);
+    color: var(--col-bg);
+    position: absolute;
+    border-radius: 2em;
+    box-shadow: 0 0 0.5em 0.1em grey;
+    transition: 0.25s;
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.addLink:hover {
+    box-shadow: 0 0 0 0.1em grey;
+    opacity: 1;
+}
+
+.addLink:after {
+    content: "+";
+    position: absolute;
+    font-size: 2em;
+    width: 1em;
+    height: 1em;
+    left: 0;
+    top: 0;
+    text-align: center;
+    line-height: 1em;
+}
+
+#linkTop {
+    top: -2.5em; 
+    left: calc(50% - 1em);
+}
+
+#linkBottom {
+    bottom: -2.5em;
+    left: calc(50% - 1em);
+}
+
+#linkLeft {
+    left: -2.5em;
+    top: calc(50% - 1em);
+}
+
+#linkRight {
+    right: -2.5em; 
+    top: calc(50% - 1em);
+}
+
+.addLink.mouseLink {
+    padding: 0.5em;
+}
+
+.addLink.mouseLink:after {
+    content: none;
+}
+
+#linkTop.mouseLink {
+    top: -0.6em;
+    left: calc(50% - 0.5em);
+}
+
+#linkBottom.mouseLink {
+    bottom: -0.6em;
+    left: calc(50% - 0.5em);
+}
+
+#linkLeft.mouseLink {
+    left: -0.6em;
+    top: calc(50% - 0.5em);
+}
+
+#linkRight.mouseLink {
+    right: -0.6em; 
+    top: calc(50% - 0.5em);
+}
+
+.tooltip {
+    overflow-wrap: anywhere;
+    pointer-events: none;
+    cursor: text;
+}
+
+.head, .sub, .info, .era, .link {
+    user-select: none;
+}
+
+.date,
+.colorPicker,
+.nodeMenu {
+    transform: translateZ(-10px);
+}
+
+.head, .sub, .info {
+    transform-style: preserve-3d;
+    border: solid;
+    padding: 1em 0em 1em 0em;
+    width: max-content;
+    position: absolute;
+    transform: translate3d(-50%, 0px, 0px);
+    z-index: 3;
+    background-color: black;
+}
+
+/* Will add an area below for you to hover over, only when already hovering */
+.head::after,
+.sub::after,
+.info::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 0.8em;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.head:not(.editing):hover::after,
+.sub:not(.editing):hover::after,
+.info:not(.editing):hover::after {
+    pointer-events: auto;
+}
+
+.head .tooltip,
+.sub .tooltip,
+.info .tooltip {
+    background-color: #000000AA;
+    transition: 0.25s;
+    position: absolute;
+    padding: 1em 0.5em 0em 0.5em;
+    top: 50%;
+    transform: translate3d(-50%, 0px, -10px);
+    left: 50%;
+    font-size: small;
+    width: calc(100% - 1em);
+    border: 0.1em solid #ffffffAA;
+    border-radius: 0.5em;
+    color: #fff;
+    text-align: center;
+    opacity: 0;
+    resize: none;
+    overflow: hidden;
+}
+
+.head:not(.editing):hover .tooltip,
+.sub:not(.editing):hover .tooltip,
+.info:not(.editing):hover .tooltip,
+.head:not(.editing) .tooltip:focus,
+.sub:not(.editing) .tooltip:focus,
+.info:not(.editing) .tooltip:focus {
+    opacity: 1;
+    height: initial;
+    margin-top: 1em;
+    top: 100%;
+    pointer-events: auto;
+}
+
+.colorPicker {
+    transition: 0.25s;
+    position: absolute;
+    left: calc(50% - 1em);
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+    outline: solid black 0.1em;
+    width: 5em;
+    /* Round the right two corners */
+    border-radius: 0 0.5em 0.5em 0;
+}
+
+.head:not(.editing):hover .colorPicker {
+    transition: 0.25s;
+    left: calc(100%);
+    opacity: 1;
+}
+
+.era .title {
+    white-space: nowrap;
+    background-color: var(--col-txt);
+    position: sticky;
+    left: 100%;
+    font-size: small;
+    margin-left: 2em;
+    top: 0;
+    margin-top: 0;
+    transition: 0.25s;
+    color: black;
+    padding: 0.5em 0;
+    width: max-content;
+    height: 1em;
+    pointer-events: all;
+}
+
+.head {
+    color: black;
+    background-color: var(--col-txt);
+    border-radius: 0.1em;
+}
+
+.description {
+    display: none;
+}
+
+.sub {
+    border-radius: 2em;
+}
+
+.era {
+    width: 2em;
+    background-color: var(--col-txt);
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    z-index: 4;
+}
+
+svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: visible;
+    z-index: 1;
+    pointer-events: none;
+}
+
+#popup input[type="checkbox"] {
+    align-self: flex-start;
+    margin: 0.25em 0 1em 0;
+}
+
+#isEncrypted:not(:checked) ~ *:not([type="submit"]) {
+    opacity: 0.25;
+    pointer-events: none;
+}
+
+#popup input[type="button"],
+#popup input[type="submit"] {
+    transition: 0.2s;
+}
+
+#popup input[type="button"]:hover,
+#popup input[type="submit"]:hover {
+    transition: 0.2s;
+    border-color: var(--col-red);
+}
+
+#keyLabel.error::after {
+    color: var(--col-red);
+    content: " (Invalid)";
+    font-size: small;
+}
+
+.head input.date {
+    transition: 0.25s;
+    position: absolute;
+    color: lightgray;
+    background-color: black;
+    left: 1em;
+    top: 0em;
+    border: 0.1em solid grey;
+    border-bottom: 0;
+    border-radius: 0.1em 0.1em 0 0;
+    font-size: x-small;
+    opacity: 0;
+}
+
+.head:hover input.date {
+    top: -1.5em;
+    opacity: 1;
+}
+
+.nodeMenu {
+    height: 1em;
+    z-index: 10;
+    transition: 0.25s;
+    padding: 0.1em 0.1em 0.2em 0.1em;
+    position: fixed;
+    left: 50%;
+    top: 0em;
+    opacity: 0;
+    border-radius: 0em 0.25em 0.25em 0em;
+    outline: 0.15em solid;
+    background-color: black;
+    pointer-events: none;
+}
+
+.sub:not(.editing):hover .nodeMenu {
+    left: calc(100% - 1em);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.head:not(.editing):hover .nodeMenu,
+.info:not(.editing):hover .nodeMenu {
+    left: 100%;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.sub .nodeMenu ul {
+    padding-left: 1em;
+}
+
+.nodeMenu ul {
+    display: flex;
+    margin-top: -0.1em;
+    padding: 0;
+}
+
+.nodeMenu ul li {
+    padding: 0.1em;
+    padding-top: 0em;
+    display: initial;
+    cursor: pointer;
+}
+
+.editing {
+    outline-style: dashed;
+    outline-color: #88888888;
+}
+
+#infobar {
+    display: none;
+    background-color: #CCCCCCCC;
+    position: fixed;
+    z-index: 5;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    padding: 0.5em;
+    font-size: 0.75em;
+    height: 0.75em;
+    line-height: 1em;
+}
+
+.editLink {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    padding: 0;
+    border-radius: 1em;
+    width: 0.75em;
+    height: 0.75em;
+    transition: 0.25s;
+    border-style: solid;
+    border-width: 0.2em;
+    transition: background-color 0.25s, border-color 0.25s;
+}
+
+.editLink:hover {
+    transition: background-color 0.25s, border-color 0.25s;
+}
+
+/*
+PRINTING STYLES
+*/
+
+.print #mapSettings {
+    display: none;
+}
+
+.print ::-webkit-scrollbar {
+    display: none;
+}
+
+.print * {
+    user-select: none;
+    pointer-events: none;
+    font-size: large;
+}
+
+.print .tooltip {
+    font-size: medium;
+}
+
+.print .era .title {
+    font-size: medium;
+}
+
+.print .editLink {
+    font-size: medium;
+    border-width: 0.175em;
+}
+
+.print2 .editLink {
+    display: none;
+}
+
+.print1 .tooltip {
+    opacity: 1;
+    height: initial;
+    margin-top: 1em;
+    top: 100%;
+    pointer-events: auto;
+}
+
+.print .sub.print2 > .tooltip {
+    display: none;
+}
+
+.print .head.print2 > .tooltip {
+    display: none;
+}
+
+@media print {
+    #mapSettings {
+        display: none;
+    }
+}
+
+#popup .object {
+    position: relative;
+    margin: 0.5em;
+    transform: none;
+    /* Drag and drop */
+    cursor: grab;
+}
+
+#popup .object .title {
+    pointer-events: none;    
+}
+
+#dragCanvas {
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    width: calc(100% - 1em);
+    height: calc(100% - 1em);
+    z-index: 5;
+    user-select: none;
+    opacity: 0.5;
+    display: none;
+    outline: transparent dashed;
+}
+
+#dragCanvas.show {
+    display: block;
+    transition: 0.25s;
+}
+
+#dragCanvas.dragTarget {
+    background-color: var(--col-txt);
+    outline: var(--col-txt) dashed;
+}

@@ -24,11 +24,14 @@ function Home() {
 
   const { data, isError, isLoading } = useSneezes()
 
-  if (!data || isError || isLoading) {
-    return <p>Loading</p>
+  const sneezeData = data || {
+    count: 0,
+    updated: '',
+    calendar: { _: { count: 0, confirmed: 0 } },
   }
 
-  const { count, updated, calendar } = data
+  const { count, updated, calendar } = sneezeData
+
   // Find the record setter of sneezes
   let record = Object.keys(calendar)[0]
   let total = calendar[record].count
@@ -40,7 +43,7 @@ function Home() {
     }
   })
 
-  const { yearSquares, monthSquares } = process(data, view, record)
+  const { yearSquares, monthSquares } = process(sneezeData, view, record)
 
   // Started
   const started = new Date(
@@ -147,132 +150,144 @@ function Home() {
         </p>
       </div>
       <div id="sneezeBox">
-        <div className="card">
-          <h1>
-            <span id="holo">
-              <b id="count">{count.toLocaleString()}</b>
-            </span>{' '}
-            sneezes
-          </h1>
-          <p>
-            Count Start:{' '}
-            <b id="start" className="date">
-              {formatFullDate(started)}
-            </b>
-          </p>
-          <p>
-            Last Updated:{' '}
-            <b id="updated" className="date">
-              {formatFullDate(updatedDate)}
-            </b>
-          </p>
-          <p>
-            Current Time:{' '}
-            <b id="now" className="date">
-              {formatFullDate(now)}
-            </b>
-          </p>
-          <hr />
-          <h2>Calendar</h2>
-          <div className="graph yearly">
-            <ul className="months">
-              <li>Jan</li>
-              <li>Feb</li>
-              <li>Mar</li>
-              <li>Apr</li>
-              <li>May</li>
-              <li>Jun</li>
-              <li>Jul</li>
-              <li>Aug</li>
-              <li>Sep</li>
-              <li>Oct</li>
-              <li>Nov</li>
-              <li>Dec</li>
-            </ul>
-            <ul className="days">
-              <li>Sun</li>
-              <li>Mon</li>
-              <li>Tue</li>
-              <li>Wed</li>
-              <li>Thu</li>
-              <li>Fri</li>
-              <li>Sat</li>
-            </ul>
-            <ul className="squares">{yearSquares}</ul>
-            <div className="switch">
-              <a onClick={() => changeView('-y')}>{`<`}</a>
-              <h3 className="date">{view.getFullYear()}</h3>
-              <a onClick={() => changeView('+y')}>{`>`}</a>
-            </div>
+        <div id="loading-projects" className={isLoading ? 'loading' : 'loaded'}>
+          <div className="lds-ripple">
+            <div></div>
+            <div></div>
           </div>
-          <div className="graph monthly">
-            <ul className="days">
-              <li>Sun</li>
-              <li>Mon</li>
-              <li>Tue</li>
-              <li>Wed</li>
-              <li>Thu</li>
-              <li>Fri</li>
-              <li>Sat</li>
-            </ul>
-            <ul className="squares">{monthSquares}</ul>
-            <div className="switch">
-              <a onClick={() => changeView('-m')}>{`<`}</a>
-              <h3 className="date">
-                {view.toDateString().split(' ')[1]} {view.getFullYear()}
-              </h3>
-              <a onClick={() => changeView('+m')}>{`>`}</a>
-            </div>
-          </div>
-          <div className="key">
-            <ul className="squares">
-              <li data-level="1" count="0"></li>
-              <li data-level="2" count="1 - 2"></li>
-              <li data-level="3" count="3 - 5"></li>
-              <li data-level="4" count="6 - 9"></li>
-              <li data-level="5" count="10 - 14"></li>
-              <li data-level="6" count="15 - 20"></li>
-              <li data-level="7" count="21 - 29"></li>
-              <li data-level="8" count="30+"></li>
-            </ul>
+          <span className="scanline"></span>
+        </div>
+        {!isLoading && (
+          <div className="card">
+            <h1>
+              <span id="holo">
+                <b id="count">{count.toLocaleString()}</b>
+              </span>{' '}
+              sneezes
+            </h1>
             <p>
-              (slashed squares either have no data or are yet to be confirmed)
+              Count Start:{' '}
+              <b id="start" className="date">
+                {formatFullDate(started)}
+              </b>
+            </p>
+            <p>
+              Last Updated:{' '}
+              <b id="updated" className="date">
+                {formatFullDate(updatedDate)}
+              </b>
+            </p>
+            <p>
+              Current Time:{' '}
+              <b id="now" className="date">
+                {formatFullDate(now)}
+              </b>
+            </p>
+            <hr />
+            <h2>Calendar</h2>
+            <div className="graph yearly">
+              <ul className="months">
+                <li>Jan</li>
+                <li>Feb</li>
+                <li>Mar</li>
+                <li>Apr</li>
+                <li>May</li>
+                <li>Jun</li>
+                <li>Jul</li>
+                <li>Aug</li>
+                <li>Sep</li>
+                <li>Oct</li>
+                <li>Nov</li>
+                <li>Dec</li>
+              </ul>
+              <ul className="days">
+                <li>Sun</li>
+                <li>Mon</li>
+                <li>Tue</li>
+                <li>Wed</li>
+                <li>Thu</li>
+                <li>Fri</li>
+                <li>Sat</li>
+              </ul>
+              <ul className="squares">{yearSquares}</ul>
+              <div className="switch">
+                <a onClick={() => changeView('-y')}>{`<`}</a>
+                <h3 className="date">{view.getFullYear()}</h3>
+                <a onClick={() => changeView('+y')}>{`>`}</a>
+              </div>
+            </div>
+            <div className="graph monthly">
+              <ul className="days">
+                <li>Sun</li>
+                <li>Mon</li>
+                <li>Tue</li>
+                <li>Wed</li>
+                <li>Thu</li>
+                <li>Fri</li>
+                <li>Sat</li>
+              </ul>
+              <ul className="squares">{monthSquares}</ul>
+              <div className="switch">
+                <a onClick={() => changeView('-m')}>{`<`}</a>
+                <h3 className="date">
+                  {view.toDateString().split(' ')[1]} {view.getFullYear()}
+                </h3>
+                <a onClick={() => changeView('+m')}>{`>`}</a>
+              </div>
+            </div>
+            <div className="key">
+              <ul className="squares">
+                <li data-level="1" count="0"></li>
+                <li data-level="2" count="1 - 2"></li>
+                <li data-level="3" count="3 - 5"></li>
+                <li data-level="4" count="6 - 9"></li>
+                <li data-level="5" count="10 - 14"></li>
+                <li data-level="6" count="15 - 20"></li>
+                <li data-level="7" count="21 - 29"></li>
+                <li data-level="8" count="30+"></li>
+              </ul>
+              <p>
+                (slashed squares either have no data or are yet to be confirmed)
+              </p>
+            </div>
+            <hr />
+            <h2>Averages</h2>
+            <p>
+              Average sneezes per day:{' '}
+              <b id="daily">{daily.toLocaleString()}</b>
+            </p>
+            <p>
+              Average time between sneezes:{' '}
+              <b id="interval" className="date">
+                {interval}
+              </b>
+            </p>
+            <h2>Milestone Estimates</h2>
+            <p>
+              4-digit milestone (
+              <b id="thousandMS">{thousandMS.toLocaleString()}</b> sneezes):{' '}
+              <b id="thousand" className="date">
+                {formatRelativeDate(thousand, updated)}
+              </b>
+            </p>
+            <p>
+              5-digit milestone (
+              <b id="tenThousandMS">{tenThousandMS.toLocaleString()}</b>{' '}
+              sneezes):{' '}
+              <b id="tenThousand" className="date">
+                {formatRelativeDate(tenThousand, updated)}
+              </b>
+            </p>
+            <p>
+              6-digit milestone (
+              <b id="hunThousandMS">{hunThousandMS.toLocaleString()}</b>{' '}
+              sneezes):{' '}
+              <b id="hunThousand" className="date">
+                {formatRelativeDate(hunThousand, updated)}
+              </b>
             </p>
           </div>
-          <hr />
-          <h2>Averages</h2>
-          <p>
-            Average sneezes per day: <b id="daily">{daily.toLocaleString()}</b>
-          </p>
-          <p>
-            Average time between sneezes:{' '}
-            <b id="interval" className="date">
-              {interval}
-            </b>
-          </p>
-          <h2>Milestone Estimates</h2>
-          <p>
-            4-digit milestone (
-            <b id="thousandMS">{thousandMS.toLocaleString()}</b> sneezes):{' '}
-            <b id="thousand" className="date">
-              {formatRelativeDate(thousand, updated)}
-            </b>
-          </p>
-          <p>
-            5-digit milestone (
-            <b id="tenThousandMS">{tenThousandMS.toLocaleString()}</b> sneezes):{' '}
-            <b id="tenThousand" className="date">
-              {formatRelativeDate(tenThousand, updated)}
-            </b>
-          </p>
-          <p>
-            6-digit milestone (
-            <b id="hunThousandMS">{hunThousandMS.toLocaleString()}</b> sneezes):{' '}
-            <b id="hunThousand" className="date">
-              {formatRelativeDate(hunThousand, updated)}
-            </b>
-          </p>
-        </div>
+        )}
       </div>
     </div>
   )

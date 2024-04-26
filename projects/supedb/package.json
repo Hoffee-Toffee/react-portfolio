@@ -1,0 +1,24 @@
+{
+  "name": "supe-db",
+  "version": "1.0.0",
+  "engines": {
+    "node": "12.x"
+  },
+  "description": "A database to help with complex story planning",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Tristan Bulmer",
+  "license": "ISC",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Transit-Lumber/supedb.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Transit-Lumber/supedb/issues"
+  },
+  "homepage": "https://github.com/Transit-Lumber/supedb#readme"
+}

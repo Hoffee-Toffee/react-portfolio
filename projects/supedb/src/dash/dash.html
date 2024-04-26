@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Dashboard</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Add firebase JS files here -->
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-auth.js"></script>
+
+        <!-- Add unique CSS and JS files here -->
+        <link rel="stylesheet" href="dash.css">
+        <script src="dash.js"></script>
+
+        <!-- Add common CSS and JS files here -->
+        <link rel="stylesheet" href="../common/common.css">
+        <link rel="stylesheet" href="../common/help.css">
+        <script src="../common/common.js"></script>
+        <script src="../common/help.js"></script>
+        
+        <!-- Font Awesome -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <body>
+        <div id="helpScreen"></div>
+        <div id="mapSettings" aria-hidden="true">
+            <i class="fa fa-sign-out" onclick="window.location.href = '../login/login.html#logout'"></i>
+            <i class="fa fa-question-circle" onclick="help()"></i>
+            <i class="fa fa-cog" onclick="settingsMenu()"></i>
+        </div>
+        <div id="popup">
+            <!-- EDIT MENU -->
+            <!-- Theme -->
+            <!-- When clicked, the theme is applied to the page, styled differently to show that it is selected -->
+            <label for="theme" class="editMenu">Theme:</label>
+            <fieldset id="theme" class="editMenu">
+                <!-- Aegis, !Carnival, !Frontier, !Granite, Minutes, !Moonset, Nano, Rebirth -->
+                <input type="radio" name="theme" id="aegis" value="aegis">
+                <label for="aegis" title="Aegis">
+                    <iframe src="../common/themes/theme.html#aegis" frameborder="0"></iframe>
+                </label>
+
+                <!-- <input type="radio" name="theme" id="carnival" value="carnival">
+                <label for="carnival" title="Carnival">
+                    <iframe src="../common/themes/theme.html#carnival" frameborder="0"></iframe>
+                </label> -->
+
+                <!-- <input type="radio" name="theme" id="frontier" value="frontier">
+                <label for="frontier" title="Frontier">
+                    <iframe src="../common/themes/theme.html#frontier" frameborder="0"></iframe>
+                </label> -->
+
+                <!-- <input type="radio" name="theme" id="granite" value="granite">
+                <label for="granite" title="Granite">
+                    <iframe src="../common/themes/theme.html#granite" frameborder="0"></iframe>
+                </label> -->
+
+                <input type="radio" name="theme" id="minutes" value="minutes">
+                <label for="minutes" title="Minutes">
+                    <iframe src="../common/themes/theme.html#minutes" frameborder="0"></iframe>
+                </label>
+
+                <!-- <input type="radio" name="theme" id="moonset" value="moonset">
+                <label for="moonset" title="Moonset">
+                    <iframe src="../common/themes/theme.html#moonset" frameborder="0"></iframe>
+                </label> -->
+
+                <input type="radio" name="theme" id="nano" value="nano">
+                <label for="nano" title="Nano">
+                    <iframe src="../common/themes/theme.html#nano" frameborder="0"></iframe>
+                </label>
+
+                <input type="radio" name="theme" id="rebirth" value="rebirth">
+                <label for="rebirth" title="Rebirth">
+                    <iframe src="../common/themes/theme.html#rebirth" frameborder="0"></iframe>
+                </label>
+                
+            </fieldset>
+        </div>
+
+        <div id="project-menu">
+            <div id="empty-message">
+                <p>No projects exist.</p>
+                <p>Right click and select "New Project" to create one.</p>
+                <p>If you were invited to a project, you may need to contact the project owner to check your permissions.</p>
+            </div>
+        </div>
+    </body>
+</html>

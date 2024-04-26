@@ -1,31 +1,9 @@
-[submodule "OmniFocus"]
-	path = projects/OmniFocus
-	url = https://github.com/fstevens30/OmniFocus
-[submodule "Dead-Space"]
+[submodule "projects/Dead-Space"]
 	path = projects/Dead-Space
 	url = https://github.com/Hoffee-Toffee/Dead-Space.git
-	branch = main
-[submodule "supe-game"]
+[submodule "projects/supe-game"]
 	path = projects/supe-game
 	url = https://github.com/Hoffee-Toffee/supe-game.git
-[submodule "supedb"]
+[submodule "projects/supedb"]
 	path = projects/supedb
 	url = https://github.com/Hoffee-Toffee/supedb.git
-[submodule "datacord"]
-	path = projects/datacord
-	url = https://github.com/Hoffee-Toffee/datacord.git
-[submodule "client/projects/OmniFocus"]
-	path = client/projects/OmniFocus
-	url = https://github.com/fstevens30/OmniFocus
-[submodule "client/projects/Dead-Space"]
-	path = client/projects/Dead-Space
-	url = https://github.com/Hoffee-Toffee/Dead-Space.git
-[submodule "client/projects/supe-game"]
-	path = client/projects/supe-game
-	url = https://github.com/Hoffee-Toffee/supe-game.git
-[submodule "client/projects/supedb"]
-	path = client/projects/supedb
-	url = https://github.com/Hoffee-Toffee/supedb.git
-[submodule "client/projects/datacord"]
-	path = client/projects/datacord
-	url = https://github.com/Hoffee-Toffee/datacord.git

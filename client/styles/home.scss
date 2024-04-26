@@ -41,6 +41,12 @@ html#homePage {
   /* ===== ------------------ ===== */
   /* =====   SNEEZE COUNTER   ===== */
   /* ===== ------------------ ===== */
+  .loading, .loaded {
+  transition-duration: 0.5s;
+    position: absolute;
+    left: calc(50vw - 50px);
+    top: calc(25vh - 50px);
+    padding-bottom: calc(25vh - 50px);}
 
   #sneezeBox {
     padding-top: 1em;

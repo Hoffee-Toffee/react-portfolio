@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "test": "vitest",
+    "install:all": "node scripts/installAll.cjs",
     "start": "node dist/server.js",
     "dev": "run-p dev:client dev:server",
     "dev:client": "vite",
@@ -28,6 +29,7 @@
   "dependencies": {
     "@firebase/app": "^0.9.23",
     "@firebase/firestore": "^4.3.2",
+    "@types/react-router-dom": "^5.3.3",
     "@uidotdev/usehooks": "^2.4.1",
     "dotenv": "^16.3.1",
     "esbuild": "^0.18.20",

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Wiki</title>
+        <!-- Open Graph -->
+        <meta property="og:title" content="A wiki page at SupeDB">
+        <meta property="og:description" content="Information on this page is restricted to users with the appropriate permissions. Please log in to view this page.">
+        <meta name="description" content="Information on this page is restricted to users with the appropriate permissions. Please log in to view this page.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Add firebase JS files here -->
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-storage.js"></script>
+
+        <!-- Add unique CSS and JS files here -->
+        <link rel="stylesheet" href="wiki.css">
+        <script src="wiki.js"></script>
+
+        <!-- Add common CSS and JS files here -->
+        <link rel="stylesheet" href="../common/common.css">
+        <link rel="stylesheet" href="../common/help.css">
+        <script src="../common/common.js"></script>
+        <script src="../common/help.js"></script>
+
+        <!-- Font Awesome -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="helpScreen"></div>
+        <div id="mapSettings" aria-hidden="true">
+            <!-- Sign out -->
+            <i class="fa fa-sign-out" onclick="window.location.href = '../login/login.html#logout'" title="Sign Out"></i>
+            <!-- Help -->
+            <i class="fa fa-question-circle" onclick="help()" title="Help"></i>
+            <!-- Edit mode -->
+            <label for="editMode" class="switch">
+                <input type="checkbox" id="editMode" onclick="toggleEdit()">
+                <i class="fa fa-file-text-o" title="Edit Mode"></i>
+            </label>
+            <!-- Settings -->
+            <i class="fa fa-cog" onclick="settingsMenu()"></i>
+        </div>
+        <div id="popup">
+            <p>See Also: <a href="../dash/dash.html#settings">User Settings</a>, <a id="toProjectSettings" href="">Project Settings</a></p>
+        </div>
+        <div id="notices" aria-hidden="true"></div>
+
+        <div id="wikiPage"></div>
+    </body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Map</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Add firebase JS files here -->
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-auth.js"></script>
+
+        <!-- Add unique CSS and JS files here -->
+        <link rel="stylesheet" href="map.css">
+        <script src="map.js"></script>
+
+        <!-- Add common CSS and JS files here -->
+        <link rel="stylesheet" href="../common/common.css">
+        <link rel="stylesheet" href="../common/help.css">
+        <script src="../common/common.js"></script>
+        <script src="../common/help.js"></script>
+
+        <!-- Font Awesome -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="helpScreen"></div>
+        <!-- Color list for the color pickers -->
+        <datalist id="colors">
+            <option value="#FFFFFF" alt="White">White</option>
+            <option value="#4D2800">Brown</option>
+            <option value="#E81313">Red</option>
+            <option value="#CC4E00">Orange</option>
+            <option value="#FCCE14">Yellow</option>
+            <option value="#7EAC11">Lime</option>
+            <option value="#008A0E">Green</option>
+            <option value="#008573">Teal</option>
+            <option value="#1071E5">Blue</option>
+            <option value="#635DFF">Lavender</option>
+            <option value="#BA23F6">Purple</option>
+            <option value="#D916A8">Pink</option>
+        </datalist>
+
+        <div id="notices" aria-hidden="true"></div>
+        <div id="mapSettings" aria-hidden="true">
+            <!-- Sign out -->
+            <i class="fa fa-sign-out" title="Sign Out" onclick="window.location.href = '../login/login.html#logout'"></i>
+            <!-- Help -->
+            <i class="fa fa-question-circle" title="Help" onclick="help()"></i>
+            <!-- Add from Wiki -->
+            <i class="fa fa-file-text" title="Add from Wiki" onclick="settingsMenu('addFromWiki')"></i>
+            <!-- Settings -->
+            <i class="fa fa-cog" title="Settings" onclick="settingsMenu('editMenu')"></i>
+            <!-- Toggle offline / online mode (auto save) -->
+            <label for="online">
+                <!-- Run checkStatus() when the checkbox is checked or unchecked with the click event taken as an argument -->
+                <input type="checkbox" id="online" checked onclick="checkStatus(event)">
+                <i class="fa fa-cloud" title="Toggle Offline Mode"></i>
+            </label>
+            <!-- Notifications -->
+            <label for="notifications" class="switch">
+                <input type="checkbox" id="notifications" checked>
+                <i class="fa fa-bell" title="Toggle Notifications"></i>
+            </label>
+        </div>
+        <div id="popup">
+            <!-- EDIT MENU -->
+            <p>See Also: <a href="../dash/dash.html#settings">User Settings</a>, <a href="../versions/versions.html#settings">Project Settings</a></p>
+            <!-- Title -->
+            <label for="newTitle" class="editMenu">Title:</label>
+            <input id="newTitle" class="editMenu" type="text">
+
+            <!-- Description -->
+            <label for="newDesc" class="editMenu">Description:</label>
+            <textarea id="newDesc" class="editMenu" cols="30" rows="10" style="resize: none;"></textarea>
+
+            <!-- Permissions -->
+            <label for="newPerm" class="editMenu">Permissions:</label>
+            <table id="newPerm" class="editMenu">
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                </tr>
+            </table>
+
+            <!-- Save -->
+            <button id="save" class="editMenu">Save</button>
+
+            <!-- LOAD MENU -->
+
+            <!-- Table -->
+            <label for="saves" class="loadMenu">Saves:</label>
+            <table id="saves" class="loadMenu">
+                <tr>
+                    <th>Created</th>
+                    <th>Options</th>
+                </tr>
+            </table>
+
+            <!-- Cancel -->
+            <button id="cancel" class="loadMenu" onclick="settingsMenu()">Cancel</button>
+
+            <!-- ADD FROM WIKI MENU -->
+
+            <!-- Grid -->
+            <label class="addFromWiki">Hidden Nodes:</label>
+            <div id="wikiGrid" class="addFromWiki"></div>
+        </div>
+        <div id="addLink">
+            <span id="linkTop"></span>
+            <span id="linkDown"></span>
+            <span id="linkLeft"></span>
+            <span id="linkRight"></span>
+        </div>
+
+        <svg style="height: 0; width: 0;" id="arrow-templates">
+            <defs>
+            <marker id="arrow" markerWidth="13" markerHeight="13" refx="9" refy="6" orient="auto">
+                <path d="M2,1 L2,10 L10,6 L2,2" fill="grey"/>
+            </marker>
+            </defs>
+            <use href="#arrow"/>
+        </svg>
+        <div id="dragCanvas"></div>
+    </body>
+</html>

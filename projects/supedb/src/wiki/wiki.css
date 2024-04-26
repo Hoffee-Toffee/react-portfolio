@@ -1,0 +1,698 @@
+body {
+    color: #ddd;
+    padding: 0;
+}
+
+#wikiPage {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    line-height: 1.5;
+    font-size: 1em;
+    border-radius: 0.5em;
+    padding: 0.5em;
+    width: calc(100% - 1.5em);
+    text-shadow: 0 0 0.1em #ffffff80;
+}
+
+#wikiPage::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1.5em;
+    position: absolute;
+    left: 0;
+    z-index: -1;
+}
+
+#wikiPage div {
+    display: flow-root;
+}
+
+#wikiPage h1,
+#wikiPage h2,
+#wikiPage h3 {
+    color: #e8e8e8;
+    text-shadow: 0 0 0.25em var(--col-orange-hover);
+    font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+    display: inline-block;
+    transition: 0.25s;
+    outline-color: transparent;
+}
+
+#wikiPage h1 {
+    font-weight: bold;
+    margin: -0.5em;
+    padding-bottom: 2em;
+    font-size: 1em;
+    color: #999;
+}
+
+#wikiPage h1 a {
+    filter: grayscale(0.5);
+}
+
+#wikiPage h1 span ~ a,
+#searchIcon {
+    position: absolute;
+    right: 1.4em;
+    transition: 0.25s;
+}
+
+#searchIcon:hover {
+    cursor: pointer;
+    text-shadow: 0 0 0.5em var(--col-orange);
+}
+
+#wikiPage h1 span ~ a {
+    top: 3.75em;
+    right: 1em;
+}
+
+#searchBox {
+    position: absolute;
+    right: 3.5em;
+    background-color: var(--col-bg);
+    border-radius: 0.25em;
+    border-color: var(--col-orange-hover);
+    border-style: solid;
+    color: var(--col-txt);
+    opacity: 0.75;
+    max-width: calc(50vw - 4em);
+    width: 20em;
+    padding: 0.25em;
+    top: 1.5em;
+}
+
+#searchBox:focus {
+    outline: none;
+    border-color: var(--col-orange-shadow);
+}
+
+#wikiPage h1::after {
+    content: "";
+    display: block;
+    width: calc(100vw - 2.5em);
+    height: 1px;
+    background-color: #333;
+}
+
+#wikiPage h2 {
+    font-weight: bold;
+    margin: 0;
+    font-size: 1.75em;
+    line-height: 2em;
+}
+
+#wikiPage h3 {
+    font-weight: normal;
+    margin-bottom: 0;
+    font-size: 1.5em;
+    line-height: 1.5em;
+}
+
+#wikiPage h4 {
+    font-size: 1.15em;
+    margin: 0;
+}
+
+#wikiPage h3::after {
+    content: "";
+    display: block;
+    width: calc(100vw - 2.5em);
+    height: 1px;
+    background-color: #555;
+}
+
+#wikiPage p {
+    display: flow-root;
+}
+
+#wikiPage .showMore {
+    font-size: 0.75em;
+    padding-left: 0.75em;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+#wikiPage ul,
+#wikiPage ol {
+    padding: 0.5em 0 0.5em 2em;
+    margin: 2em 0 0.5em 0.5em;
+    background-color: #0c0c0c;
+    width: calc(100% - 3.5em);
+    max-width: calc(100vw - 6em);
+    border-radius: 0.5em;
+    outline: 1px solid var(--col-orange-hover);
+}
+
+#wikiPage ol.toc::before {
+    content: "Table of Contents";
+}
+
+#wikiPage ul[headerText]::before,
+#wikiPage ol[headerText]::before {
+    content: attr(headerText);
+}
+
+#wikiPage ol.toc::before,
+#wikiPage ul[headerText]::before,
+#wikiPage ol[headerText]::before {
+    display: block;
+    font-weight: bold;
+    font-size: 1.25em;
+    margin-bottom: 0.5em;
+    margin-left: -1em;
+    color: #bbb;
+}
+
+#wikiPage ul li::marker,
+#wikiPage ol li::marker {
+    color: #888;
+}
+
+#wikiPage ul li,
+#wikiPage ol li {
+    margin: 0.25em 0;
+    padding-left: 0.5em;
+}
+
+#wikiPage ul li:not(:last-child)::after,
+#wikiPage ol li:not(:last-child)::after {
+    content: "";
+    display: block;
+    width: calc(100% - 1.5em);
+    height: 1px;
+    background-color: #222;
+    margin-top: 0.5em;
+    position: relative;
+}
+
+#wikiMap {
+    max-width: calc(100vw - 4em);
+    max-height: 10em;
+}
+
+#wikiPage span.note {
+    filter: brightness(0.5);
+    width: fit-content;
+    margin-top: 0.5em;
+    padding: 0em 0.3em;
+    font-size: small;
+    background-color: #222;
+    border-radius: 0.25em;
+    display: block;
+}
+
+#wikiPage .topBar {
+    margin-top: -1.3em;
+    display: flex;
+    position: absolute;
+}
+
+#wikiPage .topBar :not(:last-child) {
+    margin-right: 1em;
+    padding-right: 0em;
+}
+
+#wikiPage .topBar :not(:last-child)::after {
+    content: "-";
+    position: relative;
+    left: 0.7em;    
+}
+
+#wikiPage .collapsible {
+    top: 1em;
+    position: relative;
+    margin-top: 1em;
+    background-color: #0c0c0c;
+    outline: 1px solid var(--col-orange-hover);
+    transition: 0.25s;
+    display: grid;
+    overflow: auto;
+    border-radius: 0.5em;
+}
+
+#wikiPage .collapsible>h3:first-child,
+#wikiPage .collapsible>h5:first-child {
+    padding: 0.5em;
+    margin: 0;
+    position: relative;
+    cursor: pointer;
+    background-color: #111;
+}
+
+#wikiPage .collapsible>h3:first-child::after,
+#wikiPage .collapsible>h5:first-child::after {
+    content: '\f077';
+    font-family: FontAwesome;
+    display: inline;
+    width: min-content;
+    height: min-content;
+    position: absolute;
+    right: 1em;
+    background: none;
+    transition: 0.25s;
+}
+
+#wikiPage .collapsible ul {
+    margin: 0em 1em;
+    outline: none;
+    max-width: none;
+    width: auto;
+    list-style: none;
+    padding: 0.5em 0em;
+}
+
+#wikiPage .collapsible ul li {
+    padding: 0;
+    display: inline;
+}
+
+#wikiPage .collapsible ul li::after {
+    display: inline;
+}
+
+#wikiPage .collapsible form {
+    display: inline-flex;
+    width: calc(100% - 0em);
+}
+
+#wikiPage .collapsible form * {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+}
+
+#wikiPage .collapsible form h3 {
+    margin: 0;
+    margin-left: 1em;
+    margin-right: 2em;
+}
+
+#wikiPage .collapsible form h3::after {
+    width: calc(100% + 1em);
+}
+
+#wikiPage .collapsible.collapsed>h3:first-child::after,
+#wikiPage .collapsible.collapsed>h5:first-child::after {
+    transform: rotate(180deg);
+}
+
+#wikiPage .collapsible.collapsed *:not(:first-child) {
+    display: none !important;
+}
+
+#wikiPage pre {
+    white-space: pre-wrap;
+    margin: 1em;
+}
+
+#wikiPage .infobox {
+    background-color: #0c0c0c;
+    outline: 1px solid var(--col-red-orange-hover);
+    border-radius: 0.5em;
+    padding: 0.5em;
+    border-collapse: collapse;
+    width: 550px;
+    max-width: 50vw;
+    min-width: 20vw;
+    margin: 1em 0em 0em 1em;
+    float: right;
+    overflow: hidden;
+}
+
+#wikiPage .infobox * {
+    transition: 0.25s;
+    outline-color: transparent;
+}
+
+#wikiPage .infobox caption {
+    background-color: #111;
+    padding-bottom: 1em;
+}
+
+#wikiPage .infobox caption h3::after {
+    width: 100%;
+    background-color: #222;
+}
+
+#wikiPage .infobox img:not([src=""]) {
+    max-width: calc(100% - 3em);
+    height: auto;
+    max-height: 300px;
+    border-radius: 0.5em;
+    margin: 0;
+    margin-top: 1em;
+    background-color: #222;
+    padding: 0.5em;
+    outline: solid 1px var(--col-orange-hover);
+    display: block;
+    cursor: pointer;
+}
+
+#wikiPage #imageFull {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #000000aa;
+    backdrop-filter: blur(5px);
+}
+
+#wikiPage #imageFull div {
+    position: absolute;
+    background-color: #222;
+    width: calc(100vw - 10em);
+    height: calc(100vh - 4em);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 0.5em;
+    outline: solid 1px var(--col-orange-hover);
+    cursor: pointer;
+}
+
+#wikiPage #imageFull div img {
+    max-width: calc(100% - 1em);
+    max-height: calc(100% - 1em);
+    margin: 0;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Cross */
+#wikiPage #imageFull span {
+    position: absolute;
+    top: 1em;
+    left: 1.5em;
+    font-size: 2em;
+    color: transparent;
+    cursor: pointer;
+    transition: 0.1s;
+    color: var(--col-red);
+    text-shadow: 0 0 0.5em var(--col-red-orange);
+}
+
+#wikiPage #imageFull span:after {
+    content: '\f00d';
+    font-family: FontAwesome;
+    display: inline;
+}
+
+#wikiPage .infobox tr {
+    position: relative;
+    display: flex;
+}
+
+#wikiPage .infobox tr:not(:last-child) {
+    border-bottom: 1px solid #181818;
+}
+
+#wikiPage:not(.editing) .infobox h4.hidden,
+#wikiPage:not(.editing) .infobox tr.hidden,
+#wikiPage:not(.editing) .collapsible.hidden {
+    display: none;
+}
+
+#wikiPage .infobox th {
+    text-align: left;
+    padding: 0.5em;
+    padding-left: 0.5em;
+    color: #999;
+    vertical-align: top;
+    border-right: 1px solid #181818;
+    width: 33%;
+}
+
+#wikiPage .infobox td {
+    padding: 0.5em;
+    padding-left: 0.5em;
+    vertical-align: top;
+    width: 66%;
+}
+
+#wikiPage .infobox td.new {
+    display: flex;
+    padding: 0;
+    width: 1em;
+    position: relative;
+    flex-direction: column;
+    margin: calc(-0.5em - 0.5px);
+    margin-left: -0.3em;
+    margin-right: -0.3em;
+    top: 1px;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+#wikiPage .infobox td.new * {
+    background: none;
+    width: 1em;
+    height: 1em;
+    padding: 0;
+    border: none;
+    color: transparent;
+}
+
+#wikiPage .infobox tr:hover td.new {
+    pointer-events: auto;
+}
+
+#wikiPage .infobox tr:hover td.new * {
+    color: var(--col-red-shadow);
+    pointer-events: auto;
+}
+
+#wikiPage .infobox tr td.new *:hover {
+    color: var(--col-red-hover);
+    cursor: pointer;
+}
+
+#wikiPage.editing [contenteditable="true"]:not(img) {
+    background-color: #1c1c1c;
+    transition: 0.25s;
+    outline: 1px solid #181818;
+    border-radius: 0.25em;
+    padding: 0.25em;
+    margin: 0.25em 0.5em;
+}
+
+#wikiPage.editing [contenteditable="true"] a {
+    pointer-events: none;
+}
+
+#wikiPage.editing [contenteditable="true"]:not(img):focus {
+    background-color: #0c0c0c;
+    outline: 1px solid var(--col-orange-hover);
+}
+
+#wikiPage.editing h3[contenteditable="true"] {
+    margin-left: 0em;
+}
+
+#wikiPage.editing input[type="file"] {
+    display: none;
+}
+
+#wikiPage.editing label.new {
+    padding: 0.5em;
+    border-radius: 0.25em;
+    border: 1px solid #181818;
+    color: #999;
+    transition: 0.25s;
+    cursor: pointer;
+    display: block;
+    margin-top: 0.5em;
+    width: max-content;
+}
+
+#wikiPage.editing label.new:hover {
+    color: #fff;
+    border: 1px solid var(--col-orange-hover);
+    background-color: #1c1c1c;
+}
+
+#wikiPage form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 1em 0em;
+}
+
+#wikiPage form input,
+#wikiPage form select,
+#wikiPage form button {
+    margin: 0.5em 0em;
+    padding: 0.5em;
+    border-radius: 0.25em;
+    outline: 1px solid #181818;
+    background-color: #1c1c1c;
+    color: #999;
+    border: none;
+    transition: 0.25s;
+    cursor: pointer;
+}
+
+#wikiPage form input {
+    cursor: text;
+}
+
+#wikiPage form button:hover {
+    color: #fff;
+    outline: 1px solid var(--col-orange-hover);
+}
+
+#wikiPage form input:focus,
+#wikiPage form select:focus,
+#wikiPage form button:focus {
+    background-color: #0c0c0c;
+    outline: 1px solid var(--col-orange-hover);
+}
+
+#tooltip {
+    z-index: 10;
+    position: absolute;
+    background: #111;
+    color: var(--col-txt);
+    border-radius: 0.5em;
+    padding: 0.5em;
+    margin-top: 1em;
+    max-width: 300px;
+    width: max-content;
+    opacity: 0.8;
+    font-size: 0.8em;
+    animation: tooltip 1s;
+    transform: translateX(-50%);
+    outline: 1px solid var(--col-orange-hover);
+    text-align: center;
+    pointer-events: none;
+}
+
+@keyframes tooltip {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0;
+        margin-top: -1em;
+    }
+
+    100% {
+        opacity: 0.8;
+    }
+}
+
+#wikiPage tr.new {
+    display: flex;
+    height: 5px;
+    border: none;
+    outline: none;
+    width: 100%;
+    align-items: center;
+}
+
+#wikiPage span.new {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background-color: var(--col-orange-hover);
+    border-radius: 0.5em;
+}
+
+#wikiPage div.talk {
+    padding: 0.5em;
+    margin: 0.5em 0em;
+}
+
+#wikiPage div.talk h4 {
+    color: var(--col-orange);
+    font-weight: bold;
+}
+
+#wikiPage div.talk h4 span {
+    color: #999;
+    font-weight: normal;
+    font-size: 0.7em;
+    display: block;
+}
+
+#wikiPage .replies {
+    top: 0;
+}
+
+#wikiPage div.talk h5 {
+    margin-bottom: 0.5em;
+    margin-left: -1em;
+    margin-right: -1em;
+    padding-left: 1em;
+}
+
+#wikiPage div.replies > .talk:not(:last-child)::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: #181818;
+    top: 1em;
+    margin: 0.5em 0em;
+    position: relative;
+}
+
+#wikiPage #talkPage input,
+#wikiPage #talkPage textarea {
+    margin: 0.5em;
+    padding: 0.5em;
+    outline: 1px solid #181818;
+    background-color: #1c1c1c;
+    color: #999;
+    text-shadow: none;
+    cursor: text;
+    border: none;
+    transition: 0.25s;
+    width: -webkit-fill-available;
+}
+
+#wikiPage #talkPage button {
+    margin: 0.5em;
+    padding: 0.25em;
+    border-radius: 0.25em;
+    outline: 1px solid #181818;
+    background-color: #1c1c1c;
+    color: #999;
+    border: none;
+    transition: 0.25s;
+    cursor: pointer;
+    width: -webkit-fill-available;   
+}
+
+#wikiPage #talkPage textarea:focus {
+    background-color: #0c0c0c;
+    outline: 1px solid var(--col-orange-hover);
+}
+
+#wikiPage #talkPage button:hover {
+    color: #fff;
+    outline: 1px solid var(--col-orange-hover);
+}
+
+#wikiPage #talkPage h3 {
+    margin-top: 0.5em;
+}
+
+@media screen and (max-width: 600px) {
+    #wikiPage .infobox {
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
+        margin: 1em 0em 0em 0em;
+        float: none;
+    }
+
+    #wikiPage ul,
+    #wikiPage ol {
+        width: 100% !important;
+    }
+}

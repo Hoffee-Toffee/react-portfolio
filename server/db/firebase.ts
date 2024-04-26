@@ -1,17 +1,16 @@
 import firebase from './connection.ts'
-import { SneezeData } from '../../models/sneezeData.ts'
 
-export async function getSneezeData(): Promise<SneezeData[]> {
+export async function getSneezeData(): Promise<object | null> {
   const docRef = firebase.collection(firebase.datacord, 'data')
   const docSnap = await firebase.getDocs(docRef)
   const doc = docSnap.docs.find((doc) => doc.id == 'sneezeData')
-  return JSON.parse(doc.data().data)
+  return doc ? JSON.parse(doc.data().data) : null
 }
 
-export async function getProjectData(): Promise<string[]> {
+export async function getProjectData(): Promise<object> {
   const docRef = firebase.collection(firebase.portfolio, 'projects')
   const docSnap = await firebase.getDocs(docRef)
-  const docs = {}
+  const docs: { [key: string]: object } = {}
   docSnap.docs.forEach((doc) => (docs[doc.id] = doc.data()))
   return docs
 }

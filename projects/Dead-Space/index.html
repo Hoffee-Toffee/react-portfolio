@@ -1,0 +1,36 @@
+<html><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dead Space UI</title>
+    <meta name="description" content="A page in the style of the UI from Dead Space">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="scripts/styles.css">
+    <script src="scripts/client.js"></script>
+
+  </head>
+  <body>
+    <form>
+      <span id="scanline"></span>
+      <fieldset id="menu">
+        <legend>/main menu</legend>
+
+        <button id="New Game" onmouseover="activate(this)" class="active">
+          <div>New Game</div>
+        </button>
+
+        <button id="Load Game" onmouseover="activate(this)">
+          <div>Load Game</div>
+        </button>
+
+        <button id="Options" onmouseover="activate(this)">
+          <div>Options</div>
+        </button>
+
+        <button id="Exit to Windows" onmouseover="activate(this)">
+          <div>Exit to Windows</div>
+        </button>
+        
+      </fieldset>
+    </form>
+  
+</body></html>

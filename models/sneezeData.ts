@@ -1,8 +1,10 @@
-export interface Fruit {
-  id: number
-  name: string
+export interface SneezeData {
+  count: number
+  updated: string
+  calendar: { [key: string]: CalendarEntry }
 }
 
-export interface FruitData {
-  name: string
+export interface CalendarEntry {
+  count: number
+  confirmed: boolean
 }

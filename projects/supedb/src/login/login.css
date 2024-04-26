@@ -1,0 +1,132 @@
+/* Align children in the middle horizontally and vertically */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#login, #signup {
+    background-color: black;
+    border: var(--col-red-orange) solid 4px;
+    box-shadow: 0px 0px 10px var(--col-red-orange-shadow);
+    width: 100%;
+    max-width: 400px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    border-radius: 10px;
+}
+
+#login-title, #signup-title {
+    color: var(--col-red);
+    text-shadow: 0px 0px 5px var(--col-red-shadow);
+    font-size: 50px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.login-label, .signup-label {
+    color: var(--col-orange);
+    text-shadow: 0px 0px 15px var(--col-orange-shadow);
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.login-input, .signup-input {
+    width: 300px;
+    height: 30px;
+    font-size: 20px;
+    margin-bottom: 20px;
+    background-color: transparent;
+    color: var(--col-txt);
+    text-shadow: 0px 0px 5px #ffffffaa;
+    border: none;
+    outline: var(--col-red-orange) solid 1px;
+    box-shadow: 0px 0px 0px var(--col-red-orange-shadow);
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.login-input:focus, .signup-input:focus {
+    outline: var(--col-red-orange) solid 2px;
+    box-shadow: 0px 0px 10px var(--col-red-orange-shadow);
+}
+
+.login-input, #login-button, .signup-input, #signup-button {
+    transition: 0.2s;
+}
+
+.login-input:hover, #login-button:hover, .signup-input:hover, #signup-button:hover {
+    background-color: var(--col-dark-brown);
+    box-shadow: 0px 0px 10px var(--col-dark-brown);
+    cursor: text;
+    transform: scale(1.05);
+}
+
+#login-button, #signup-button {
+    width: 300px;
+    height: 30px;
+    background-color: black;
+    color: var(--col-red);
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    border-width: 4px;
+    border-style: solid;
+    border-color: var(--col-red);
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px var(--col-red-shadow);  
+}
+
+#login-button:hover, #signup-button:hover {
+    color: var(--col-txt);
+    background-color: var(--col-red);
+    box-shadow: 0px 0px 10px var(--col-red-shadow);
+    cursor: pointer;
+}
+
+#login-form, #signup-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#login-error, #signup-error {
+    color: var(--col-red);
+    font-size: 15px;
+    text-shadow: 0px 0px 15px var(--col-red-orange-shadow);
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding: 10px;
+    text-align: center;
+}
+
+#login-bottom, #signup-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: grey;
+    font-size: 15px;
+}
+
+#login-bottom a, #signup-bottom a {
+    color: var(--col-red-orange);
+    transition: 0.2s;
+    text-shadow: 0px 0px 0px transparent;
+}
+
+#login-bottom a:hover, #signup-bottom a:hover {
+    color: var(--col-orange);
+    text-shadow: 0px 0px 10px var(--col-orange-shadow);
+    cursor: pointer;
+}
