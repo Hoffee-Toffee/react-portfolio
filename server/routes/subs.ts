@@ -10,13 +10,13 @@ const projectsDir = Path.resolve('projects')
 
 const loadServerModule = async (project) => {
   for (let i = 0; i < 4; i++) {
-    const sects = [projectsDir, project]
+    const sects = ['projects', project]
     if (i % 2) sects.push('server')
     const ext = i < 2 ? '.ts' : '.js'
     sects.push(`server${ext}`)
     const file = Path.resolve(...sects)
     if (fs.existsSync(file)) {
-      const modulePath = `../../projects/${sects.filter((_, i) => i).join('/')}`
+      const modulePath = `../projects/${sects.filter((_, i) => i).join('/')}`
       console.log(`Attempting to load module from ${modulePath}`)
       try {
         const serverModule = await import(modulePath)
@@ -33,7 +33,7 @@ const loadServerModule = async (project) => {
   console.log(
     `No server file found for ${project}, assuming it's a static project`,
   )
-  server.use(`/${project}`, express.static(Path.resolve(projectsDir, project)))
+  server.use(`/${project}`, express.static(Path.resolve('projects', project)))
 }
 
 fs.readdir(projectsDir, async (err, projects) => {
