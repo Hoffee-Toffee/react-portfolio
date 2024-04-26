@@ -79,6 +79,6 @@
   },
   "browserslist": "> 2%, not dead",
   "engines": {
-    "node": ">=18"
+    "node": "16.x"
   },
 }
