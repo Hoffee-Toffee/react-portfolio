@@ -103,7 +103,7 @@ function Home() {
     <div id="main">
       <div id="content">
         <div id="top-box">
-          <img id="me" src="client/images/Me.png" alt="Me" />
+          <img id="me" src={require('../images/Me.png')} alt="Me" />
           <div id="right-col">
             <h1>Welcome to my portfolio!</h1>
             <ul>
