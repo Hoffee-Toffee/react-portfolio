@@ -252,7 +252,7 @@ header::after {
 }
 
 header nav {
-  height: 100vh;
+  height: 100dvh;
   top: 0em;
   padding: 1em;
   padding-top: 4em;
@@ -279,7 +279,7 @@ header nav::after {
   top: 0;
   right: 0;
   width: 8em;
-  height: 100vh;
+  height: 100dvh;
   background: linear-gradient(to left, black 0%, transparent 100%);
   pointer-events: none;
   transition: 0.25s ease-in;
@@ -333,7 +333,7 @@ nav::before {
   left: -100vw;
   top: 0;
   width: calc(100vw);
-  height: 100vh;
+  height: 100dvh;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 10;
   visibility: hidden;
@@ -572,7 +572,7 @@ footer span::before {
   /* Be in the mid of the screen (horizontaly) */
   position: absolute;
   left: calc(50vw - 50px);
-  top: calc(50vh - 50px);
+  top: calc(50dvh - 50px);
 }
 
 .loaded {

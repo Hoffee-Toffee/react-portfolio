@@ -14,7 +14,7 @@ html#interestsPage {
     overflow-y: scroll;
     overflow-x: hidden;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     scroll-snap-type: y mandatory;
     margin: 0;
     padding: 0;
@@ -66,7 +66,7 @@ html#interestsPage {
   .title-card {
     margin: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     background-color: transparent;
     z-index: 0;
     display: flex;
@@ -174,7 +174,7 @@ html#interestsPage {
 
     /* The image will fill the screen in the middle */
     width: 50vw;
-    height: calc(100vh - 1em);
+    height: calc(100dvh - 1em);
     background-size: contain;
     background-position: bottom;
     background-repeat: no-repeat;
@@ -186,7 +186,7 @@ html#interestsPage {
   #programming #github {
     background-image: url('../images/github.svg');
     width: 30vw;
-    height: 100vh;
+    height: 100dvh;
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -196,7 +196,7 @@ html#interestsPage {
 
   #space #scroll {
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     overflow: hidden;
   }
 
@@ -204,7 +204,7 @@ html#interestsPage {
     animation: position 60s infinite cubic-bezier(0.5, 0, 1, 1);
     background-image: url('../images/starship.png');
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     background-size: 40%;
     background-position: center;
     background-repeat: no-repeat;
@@ -212,7 +212,7 @@ html#interestsPage {
 
   #tetronimos {
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
   }
 
   #tetronimos * {
@@ -255,7 +255,7 @@ html#interestsPage {
   #movies-tv #memento {
     background-image: url('../images/memento.png');
     width: calc(50vw - 1em);
-    height: calc(100vh - 2em);
+    height: calc(100dvh - 2em);
     background-size: contain, 50%;
     background-position: left;
     background-repeat: no-repeat;
@@ -266,10 +266,10 @@ html#interestsPage {
 
   @keyframes position {
     0% {
-      transform: translate(-70vw, 15vh) scale(1);
+      transform: translate(-70vw, 15dvh) scale(1);
     }
     100% {
-      transform: translate(70vw, -15vh) scale(0.5);
+      transform: translate(70vw, -15dvh) scale(0.5);
     }
   }
 
