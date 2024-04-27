@@ -15,8 +15,8 @@ export async function getProjectData(): Promise<object> {
   return docs
 }
 
-export async function checkSecret(secret: string): Promise<string | null> {
+export async function checkSecret(secret: string): Promise<object | null> {
   const docRef = firebase.collection(firebase.portfolio, 'secrets')
   const docSnap = await firebase.getDocs(docRef)
-  return docSnap.docs.find((doc) => doc.id == secret)?.data().location
+  return docSnap.docs.find((doc) => doc.id == secret)?.data() || null
 }

@@ -6,8 +6,8 @@ const router = Router()
 
 router.get('/:guess', async (req, res) => {
   try {
-    const location = await db.checkSecret(req.params.guess.toLowerCase())
-    res.send(location)
+    const result = await db.checkSecret(req.params.guess.toLowerCase())
+    res.json(result)
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong' })
   }
