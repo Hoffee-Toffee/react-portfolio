@@ -10,3 +10,6 @@
 [submodule "projects/Datacord"]
 	path = projects/Datacord
 	url = https://github.com/Hoffee-Toffee/Datacord
+[submodule "projects/SeriesMingle"]
+	path = projects/SeriesMingle
+	url = https://github.com/Hoffee-Toffee/SeriesMingle
