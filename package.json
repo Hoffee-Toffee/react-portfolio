@@ -10,13 +10,13 @@
   "scripts": {
     "test": "vitest",
     "install:all": "node scripts/installAll.cjs",
-    "start": "node dist/server/index.js",
+    "start": "node dist/server.js",
     "dev": "run-p dev:client dev:server",
     "dev:client": "vite",
     "dev:server": "tsx watch server/index.ts",
     "build": "npm run install:all && npm run build:client && npm run build:server",
     "build:client": "vite build",
-    "build:server": "esbuild --platform=node --format=esm --outdir=dist --bundle projects/*/server/server.ts projects/*/server.ts",
+    "build:server": "esbuild --packages=external --platform=node --format=esm --outfile=dist/server.js --bundle server/index.ts",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "knex": "knex --knexfile ./server/db/knexfile.js"
   },
