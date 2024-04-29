@@ -37,25 +37,24 @@ const loadServerModule = async (project) => {
     const fullPath = Path.resolve(projectsDir, project, path)
     if (fs.existsSync(fullPath)) {
       console.log(`Found file at ${fullPath}`)
-      let modulePath
       if (compile) {
         console.log(`Compiling TypeScript file at ${fullPath}`)
         const compiledPath = compileTs(fullPath)
-        modulePath = Path.relative(__dirname, compiledPath)
-      } else {
-        modulePath = Path.relative(__dirname, fullPath)
-      }
-
-      console.log(`Attempting to load module from ${modulePath}`)
-      try {
+        const modulePath = require.resolve(compiledPath) // Get the absolute path of the compiled file
         const serverModule = require(modulePath)
         server.use(`/${project}`, serverModule.default)
         console.log(
           `Module loaded successfully from ${modulePath} for project ${project}`,
         )
         return
-      } catch (err) {
-        console.error(`Error loading module from ${modulePath}: ${err}`)
+      } else {
+        const modulePath = require.resolve(fullPath) // Get the absolute path of the JavaScript file
+        const serverModule = require(modulePath)
+        server.use(`/${project}`, serverModule.default)
+        console.log(
+          `Module loaded successfully from ${modulePath} for project ${project}`,
+        )
+        return
       }
     }
   }
