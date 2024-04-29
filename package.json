@@ -16,7 +16,7 @@
     "dev:server": "tsx watch server/index.ts",
     "build": "npm run install:all && npm run build:client && npm run build:server",
     "build:client": "vite build",
-    "build:server": "esbuild --platform=node --format=esm --outdir=dist --bundle server/index.ts projects/**/*.ts",
+    "build:server": "esbuild --platform=node --format=esm --outdir=dist --bundle projects/*/server/server.ts projects/*/server.ts",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "knex": "knex --knexfile ./server/db/knexfile.js"
   },
