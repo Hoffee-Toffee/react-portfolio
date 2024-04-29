@@ -2,9 +2,6 @@ import fs from 'fs'
 import * as Path from 'node:path'
 import express from 'express'
 import { buildSync } from 'esbuild' // Import esbuild to handle TypeScript compilation
-import { fileURLToPath } from 'url' // Import fileURLToPath function to convert file URL to file path
-const __filename = fileURLToPath(import.meta.url) // Get the current file's URL and convert it to a file path
-const __dirname = Path.dirname(__filename) // Get the directory name of the current file
 
 const server = express()
 
