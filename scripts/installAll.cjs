@@ -2,11 +2,21 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Run npm install, and build for all submodules under projects directory
+// Function to run a command in a given directory
+function runCommand(command, directory) {
+  console.log(`Running "${command}" in ${directory}`);
+  try {
+    execSync(command, { cwd: directory, stdio: 'inherit' });
+  } catch (error) {
+    console.error(`Error running "${command}" in ${directory}: ${error.message}`);
+  }
+}
+
+// Run npm run build for all submodules under projects directory
 const projectsDir = path.join(__dirname, '../', 'projects');
 fs.readdirSync(projectsDir).forEach(project => {
   const projectPath = path.join(projectsDir, project);
   if (fs.statSync(projectPath).isDirectory()) {
-    execSync('npm i; npm run build', { cwd: projectPath, stdio: 'inherit' });
+    runCommand('npm i; npm run build', projectPath);
   }
 });
