@@ -17,10 +17,11 @@ const loadServerModule = async (project) => {
     sects.push(`server${ext}`)
     const file = Path.resolve(...sects)
     if (fs.existsSync(file)) {
-      const modulePath = `./projects/${sects.filter((_, i) => i).join('/')}`
+      const modulePath = `../projects/${sects.filter((_, i) => i).join('/')}`
       console.log(`Attempting to load module from ${modulePath}`)
       try {
-        const serverModule = await tsImport.load(modulePath)
+        const serverModule =
+          ext == '.js' ? import(modulePath) : await tsImport.load(modulePath.slice(2))
         console.log(`Module loaded successfully from ${modulePath}`)
         server.use(`/${project}`, serverModule.default)
         console.log(`Loaded ${modulePath} for ${project}`)
