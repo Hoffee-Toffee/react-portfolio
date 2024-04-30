@@ -19,11 +19,11 @@ function canBuild(directory) {
 }
 
 // Function to run npm run build for a given directory (if existing)
-function runBuild(directory) {
+function runBuild(directory, project) {
   if (canBuild(directory)) {
     console.log(`Running npm run build in ${directory}`);
-    execSync('npm run build', { cwd: directory, stdio: 'inherit' });
-
+    // Add a root path so it knows where to host it
+    execSync(`npm run build -- --path="/projects/${project}/"`, { cwd: directory, stdio: 'inherit' })
   }
 }
 
@@ -33,6 +33,6 @@ fs.readdirSync(projectsDir).forEach(project => {
   const projectPath = path.join(projectsDir, project);
   if (fs.statSync(projectPath).isDirectory()) {
     runNpmInstall(projectPath);
-    runBuild(projectPath)
+    runBuild(projectPath, project)
   }
 });
