@@ -6,7 +6,6 @@ import Blog from './components/Blog'
 import BlogPage from './components/BlogPage'
 import Projects from './components/Projects'
 import Secret from './components/Secret'
-import ProjectRoutes from './projectRoutes'
 
 export default createRoutesFromElements(
   <>
@@ -19,7 +18,6 @@ export default createRoutesFromElements(
 
       <Route path="/projects" element={<Projects />} />
       <Route path="/secret" element={<Secret />} />
-      ProjectRoutes
     </Route>
   </>,
 )
