@@ -1,24 +1,33 @@
 import fs from 'fs'
 import * as Path from 'node:path'
 import express from 'express'
+import { spawnSync } from 'child_process'
 
 const server = express()
+
+const transpileTsToJs = (tsFilePath: string) => {
+  const jsFilePath = tsFilePath.replace(/\.ts$/, '.js')
+  spawnSync('tsc', [tsFilePath, '--outFile', jsFilePath])
+  return jsFilePath
+}
 
 server.use(express.json())
 
 const projectsDir = Path.resolve('projects')
 
-const loadServerModule = async (project) => {
-  for (let i = 0; i < 2; i++) {
+const loadServerModule = async (project: string) => {
+  for (let i = 0; i < 4; i++) {
     const sects = ['projects', project]
     if (i % 2) sects.push('server')
-    sects.push(`server.js`)
+    const ext = i < 2 ? '.ts' : '.js'
+    sects.push(`server${ext}`)
     const file = Path.resolve(...sects)
     if (fs.existsSync(file)) {
       const modulePath = `../projects/${sects.filter((_, i) => i).join('/')}`
       console.log(`Attempting to load module from ${modulePath}`)
       try {
-        const serverModule = await import(modulePath)
+        const serverModule =
+          ext == '.js' ? import(modulePath) : import(transpileTsToJs(file))
         console.log(`Module loaded successfully from ${modulePath}`)
         server.use(`/${project}`, serverModule.default)
         console.log(`Loaded ${modulePath} for ${project}`)
