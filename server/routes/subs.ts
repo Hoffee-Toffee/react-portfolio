@@ -1,6 +1,6 @@
+import fs from 'fs'
 import * as Path from 'node:path'
 import express from 'express'
-import fs from 'fs'
 import * as tsImport from 'ts-import'
 
 const server = express()
@@ -17,14 +17,9 @@ const loadServerModule = async (project) => {
     sects.push(`server${ext}`)
     const file = Path.resolve(...sects)
     if (fs.existsSync(file)) {
-      const modulePath = Path.join(
-        '..',
-        'projects',
-        ...sects.filter((_, i) => i),
-      )
+      const modulePath = `../projects/${sects.filter((_, i) => i).join('/')}`
       console.log(`Attempting to load module from ${modulePath}`)
       try {
-        // Use tsImport to load TypeScript file
         const serverModule = await tsImport.load(modulePath)
         console.log(`Module loaded successfully from ${modulePath}`)
         server.use(`/${project}`, serverModule.default)
@@ -32,6 +27,7 @@ const loadServerModule = async (project) => {
         return
       } catch (err) {
         console.error(`Error loading module from ${modulePath}: ${err}`)
+        return
       }
     }
   }
