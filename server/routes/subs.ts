@@ -21,7 +21,7 @@ const loadServerModule = async (project) => {
       console.log(`Attempting to load module from ${modulePath}`)
       try {
         const serverModule =
-          ext == '.js' ? import(modulePath) : await tsImport.load(modulePath.slice(2))
+          ext == '.js' ? import(modulePath) : await tsImport.load(file)
         console.log(`Module loaded successfully from ${modulePath}`)
         server.use(`/${project}`, serverModule.default)
         console.log(`Loaded ${modulePath} for ${project}`)
