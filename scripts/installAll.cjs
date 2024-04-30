@@ -8,11 +8,31 @@ function runNpmInstall(directory) {
   execSync('npm i', { cwd: directory, stdio: 'inherit' });
 }
 
+// Function to check if a package.json file contains a build script
+function canBuild(directory) {
+  const packageJsonPath = path.join(directory, 'package.json');
+  if (fs.existsSync(packageJsonPath)) {
+    const packageJson = require(packageJsonPath);
+    return packageJson && packageJson.scripts && packageJson.scripts.build;
+  }
+  return false;
+}
+
+// Function to run npm run build for a given directory (if existing)
+function runBuild(directory) {
+  if (canBuild(directory)) {
+    console.log(`Running npm run build in ${directory}`);
+    execSync('npm run build', { cwd: directory, stdio: 'inherit' });
+
+  }
+}
+
 // Run npm install for all submodules under projects directory
 const projectsDir = path.join(__dirname, '../', 'projects');
 fs.readdirSync(projectsDir).forEach(project => {
   const projectPath = path.join(projectsDir, project);
   if (fs.statSync(projectPath).isDirectory()) {
     runNpmInstall(projectPath);
+    runBuild(projectPath)
   }
 });

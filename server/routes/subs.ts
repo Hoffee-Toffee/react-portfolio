@@ -16,18 +16,18 @@ server.use(express.json())
 const projectsDir = Path.resolve('projects')
 
 const loadServerModule = async (project: string) => {
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 3; i++) {
     const sects = ['projects', project]
     if (i % 2) sects.push('server')
-    const ext = i < 2 ? '.ts' : '.js'
-    sects.push(`server${ext}`)
+    if (i == 2) sects.push('dist')
+
+    sects.push(`server.js`)
     const file = Path.resolve(...sects)
     if (fs.existsSync(file)) {
       const modulePath = `../projects/${sects.filter((_, i) => i).join('/')}`
       console.log(`Attempting to load module from ${modulePath}`)
       try {
-        const serverModule =
-          ext == '.js' ? import(modulePath) : import(transpileTsToJs(file))
+        const serverModule = await import(modulePath)
         console.log(`Module loaded successfully from ${modulePath}`)
         server.use(`/${project}`, serverModule.default)
         console.log(`Loaded ${modulePath} for ${project}`)
