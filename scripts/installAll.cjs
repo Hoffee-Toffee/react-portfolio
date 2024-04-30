@@ -23,7 +23,7 @@ function runBuild(directory, project) {
   if (canBuild(directory)) {
     console.log(`Running npm run build in ${directory}`);
     // Add a root path so it knows where to host it
-    execSync(`npm run build --base=/projects/${project}/`, { cwd: directory, stdio: 'inherit' })
+    execSync(`npm run build -- -- --base=/projects/${project}/`, { cwd: directory, stdio: 'inherit' })
   }
 }
 
