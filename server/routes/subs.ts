@@ -1,7 +1,6 @@
 import fs from 'fs'
 import * as Path from 'node:path'
 import express from 'express'
-import { buildSync } from 'esbuild' // Import esbuild to handle TypeScript compilation
 
 const server = express()
 
@@ -9,57 +8,32 @@ server.use(express.json())
 
 const projectsDir = Path.resolve('projects')
 
-const compileTs = (tsPath) => {
-  const outFile = tsPath.replace(/\.ts$/, '.js')
-  buildSync({
-    entryPoints: [tsPath],
-    outfile: outFile,
-    bundle: true,
-    platform: 'node',
-    format: 'cjs', // CommonJS format suitable for Node.js
-    external: ['express'], // Make express external to avoid bundling it
-  })
-  return outFile
-}
-
 const loadServerModule = async (project) => {
-  const basePaths = [
-    { path: 'server/server.ts', compile: true },
-    { path: 'server/server.js', compile: false },
-    { path: 'server.ts', compile: true },
-    { path: 'server.js', compile: false },
-  ]
-
-  for (const { path, compile } of basePaths) {
-    const fullPath = Path.resolve(projectsDir, project, path)
-    if (fs.existsSync(fullPath)) {
-      console.log(`Found file at ${fullPath}`)
-      if (compile) {
-        console.log(`Compiling TypeScript file at ${fullPath}`)
-        const compiledPath = compileTs(fullPath)
-        const modulePath = require.resolve(compiledPath) // Get the absolute path of the compiled file
-        const serverModule = require(modulePath)
+  for (let i = 0; i < 4; i++) {
+    const sects = ['projects', project]
+    if (i % 2) sects.push('server')
+    const ext = i < 2 ? '.ts' : '.js'
+    sects.push(`server${ext}`)
+    const file = Path.resolve(...sects)
+    if (fs.existsSync(file)) {
+      const modulePath = `../projects/${sects.filter((_, i) => i).join('/')}`
+      console.log(`Attempting to load module from ${modulePath}`)
+      try {
+        const serverModule = await import(modulePath)
+        console.log(`Module loaded successfully from ${modulePath}`)
         server.use(`/${project}`, serverModule.default)
-        console.log(
-          `Module loaded successfully from ${modulePath} for project ${project}`,
-        )
+        console.log(`Loaded ${modulePath} for ${project}`)
         return
-      } else {
-        const modulePath = require.resolve(fullPath) // Get the absolute path of the JavaScript file
-        const serverModule = require(modulePath)
-        server.use(`/${project}`, serverModule.default)
-        console.log(
-          `Module loaded successfully from ${modulePath} for project ${project}`,
-        )
+      } catch (err) {
+        console.error(`Error loading module from ${modulePath}: ${err}`)
         return
       }
     }
   }
-
   console.log(
     `No server file found for ${project}, assuming it's a static project`,
   )
-  server.use(`/${project}`, express.static(Path.resolve(projectsDir, project)))
+  server.use(`/${project}`, express.static(Path.resolve('projects', project)))
 }
 
 fs.readdir(projectsDir, async (err, projects) => {
