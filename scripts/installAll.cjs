@@ -23,13 +23,13 @@ function runBuild(directory, project) {
   if (canBuild(directory)) {
     console.log(`Running npm run build in ${directory}`);
     // Add a root path so it knows where to host it
-    let base = `/projects/${project}`;
+    let base = `projects/${project}`;
     // Set base in that package's config
     const packageJsonPath = path.join(directory, 'package.json');
     const packageJson = require(packageJsonPath);
     packageJson.config = packageJson.config || {};
-    packageJson.config.base = base;
-    packageJson.config.assets_dir = "assets";
+    packageJson.config.base = "/" + base;
+    packageJson.config.assets_dir = base + "/assets";
 
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     execSync('npm run build', { cwd: directory, stdio: 'inherit' });
