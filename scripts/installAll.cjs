@@ -4,7 +4,8 @@ const path = require('path');
 const esbuild = require('esbuild');
 
 async function jsify(directory) {
-  const files = await esbuild.getAllFileNames(directory);
+  // All files and paths
+  const files = fs.readdirSync(directory).map(file => path.join(directory, file));
 
   for (const file of files) {
     const filePath = path.join(directory, file);
