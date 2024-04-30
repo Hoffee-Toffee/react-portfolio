@@ -1,7 +1,6 @@
 import fs from 'fs'
 import * as Path from 'node:path'
 import express from 'express'
-import * as tsImport from 'ts-import'
 
 const server = express()
 
@@ -10,27 +9,16 @@ server.use(express.json())
 const projectsDir = Path.resolve('projects')
 
 const loadServerModule = async (project) => {
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 2; i++) {
     const sects = ['projects', project]
     if (i % 2) sects.push('server')
-    const ext = i < 2 ? '.ts' : '.js'
-    sects.push(`server${ext}`)
+    sects.push(`server.js`)
     const file = Path.resolve(...sects)
     if (fs.existsSync(file)) {
       const modulePath = `../projects/${sects.filter((_, i) => i).join('/')}`
       console.log(`Attempting to load module from ${modulePath}`)
       try {
-        const serverModule =
-          ext == '.js'
-            ? import(modulePath)
-            : await tsImport.load(file, {
-                compiler: 'typescript', // Use TypeScript compiler
-                transpileOptions: {
-                  target: 'es5', // Set target to ES5
-                  module: 'commonjs', // Compile TypeScript to CommonJS modules
-                  // Add any additional compiler options as needed
-                },
-              })
+        const serverModule = await import(modulePath)
         console.log(`Module loaded successfully from ${modulePath}`)
         server.use(`/${project}`, serverModule.default)
         console.log(`Loaded ${modulePath} for ${project}`)
