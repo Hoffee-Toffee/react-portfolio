@@ -1,15 +1,6 @@
-import fs from 'fs'
 import * as Path from 'node:path'
 import express from 'express'
-import tsNode from 'ts-node'
-
-// Register ts-node to allow dynamic loading of TypeScript files
-tsNode.register({
-  transpileOnly: true, // Disable type checking to speed up compilation
-  compilerOptions: {
-    module: 'commonjs', // Compile TypeScript to CommonJS modules
-  },
-})
+import tsImport from 'ts-import'
 
 const server = express()
 
@@ -25,17 +16,21 @@ const loadServerModule = async (project) => {
     sects.push(`server${ext}`)
     const file = Path.resolve(...sects)
     if (fs.existsSync(file)) {
-      const modulePath = `../projects/${sects.filter((_, i) => i).join('/')}`
+      const modulePath = Path.join(
+        '..',
+        'projects',
+        ...sects.filter((_, i) => i),
+      )
       console.log(`Attempting to load module from ${modulePath}`)
       try {
-        const serverModule = await import(modulePath)
+        // Use tsImport to load TypeScript file
+        const serverModule = await tsImport.load(modulePath)
         console.log(`Module loaded successfully from ${modulePath}`)
         server.use(`/${project}`, serverModule.default)
         console.log(`Loaded ${modulePath} for ${project}`)
         return
       } catch (err) {
         console.error(`Error loading module from ${modulePath}: ${err}`)
-        return
       }
     }
   }
