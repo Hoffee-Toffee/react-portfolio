@@ -1,6 +1,15 @@
 import fs from 'fs'
 import * as Path from 'node:path'
 import express from 'express'
+import tsNode from 'ts-node'
+
+// Register ts-node to allow dynamic loading of TypeScript files
+tsNode.register({
+  transpileOnly: true, // Disable type checking to speed up compilation
+  compilerOptions: {
+    module: 'commonjs', // Compile TypeScript to CommonJS modules
+  },
+})
 
 const server = express()
 

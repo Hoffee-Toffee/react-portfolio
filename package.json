@@ -69,6 +69,7 @@
     "react-router-dom": "^6.11.2",
     "sass": "^1.50.1",
     "supertest": "^6.2.2",
+    "ts-node": "^10.9.2",
     "tsx": "^3.12.7",
     "typescript": "^5.1.6",
     "vitest": "^0.34.4"
