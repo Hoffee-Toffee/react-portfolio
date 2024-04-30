@@ -1,6 +1,6 @@
 import * as Path from 'node:path'
 import express from 'express'
-import tsImport from 'ts-import'
+import * as tsImport from 'ts-import'
 
 const server = express()
 
