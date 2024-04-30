@@ -28,7 +28,7 @@ function runBuild(directory, project) {
     const packageJsonPath = path.join(directory, 'package.json');
     const packageJson = require(packageJsonPath);
     packageJson.config = packageJson.config || {};
-    packageJson.config.base = "/" + base;
+    packageJson.config.base = "/"
     packageJson.config.assets_dir = base + "/assets";
 
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
