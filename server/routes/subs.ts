@@ -21,7 +21,16 @@ const loadServerModule = async (project) => {
       console.log(`Attempting to load module from ${modulePath}`)
       try {
         const serverModule =
-          ext == '.js' ? import(modulePath) : await tsImport.load(file)
+          ext == '.js'
+            ? import(modulePath)
+            : await tsImport.load(file, {
+                compiler: 'typescript', // Use TypeScript compiler
+                transpileOptions: {
+                  target: 'es5', // Set target to ES5
+                  module: 'commonjs', // Compile TypeScript to CommonJS modules
+                  // Add any additional compiler options as needed
+                },
+              })
         console.log(`Module loaded successfully from ${modulePath}`)
         server.use(`/${project}`, serverModule.default)
         console.log(`Loaded ${modulePath} for ${project}`)
