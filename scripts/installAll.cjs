@@ -29,6 +29,8 @@ function runBuild(directory, project) {
     const packageJson = require(packageJsonPath);
     packageJson.config = packageJson.config || {};
     packageJson.config.base = base;
+    packageJson.config.assets_dir = "../";
+
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     execSync('npm run build', { cwd: directory, stdio: 'inherit' });
   }
