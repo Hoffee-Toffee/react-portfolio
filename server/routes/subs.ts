@@ -17,7 +17,7 @@ const loadServerModule = async (project) => {
     sects.push(`server${ext}`)
     const file = Path.resolve(...sects)
     if (fs.existsSync(file)) {
-      const modulePath = `../projects/${sects.filter((_, i) => i).join('/')}`
+      const modulePath = `./projects/${sects.filter((_, i) => i).join('/')}`
       console.log(`Attempting to load module from ${modulePath}`)
       try {
         const serverModule = await tsImport.load(modulePath)
