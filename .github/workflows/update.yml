@@ -1,0 +1,25 @@
+name: Update Submodules
+
+# Run 4 times a day at 2am, 8am, 2pm, 8pm (NZST) or when manually triggered
+on:
+  schedule:
+    - cron:  '0 1/6 * * *'
+  workflow_dispatch:
+    workflows: [ "Update Submodules" ]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.3.0
+        with:
+          submodules: recursive
+      - name: Update Submodules
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          git pull --recurse-submodules
+          git submodule update --remote
+          git add .
+          git commit -m "Updated Submodules"
+          git push origin Dev
