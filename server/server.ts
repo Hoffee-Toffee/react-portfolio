@@ -8,7 +8,8 @@ import subRoutes from './routes/subs.ts'
 
 const server = express()
 
-server.use(express.json())
+server.use(express.json({ limit: '50mb' }))
+server.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
 server.use('/api/v1/sneezes', sneezeRoutes)
 server.use('/api/v1/projects', projectRoutes)
