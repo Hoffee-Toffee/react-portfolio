@@ -1,22 +1,30 @@
 import fs from 'fs'
 import * as Path from 'node:path'
 import express from 'express'
+import { spawnSync } from 'child_process'
 
 const server = express()
+
+const transpileTsToJs = (tsFilePath: string) => {
+  const jsFilePath = tsFilePath.replace(/\.ts$/, '.js')
+  spawnSync('tsc', [tsFilePath, '--outFile', jsFilePath])
+  return jsFilePath
+}
 
 server.use(express.json())
 
 const projectsDir = Path.resolve('projects')
 
-const loadServerModule = async (project) => {
-  for (let i = 0; i < 4; i++) {
-    const sects = [projectsDir, project]
+const loadServerModule = async (project: string) => {
+  for (let i = 0; i < 3; i++) {
+    const sects = ['projects', project]
     if (i % 2) sects.push('server')
-    const ext = i < 2 ? '.ts' : '.js'
-    sects.push(`server${ext}`)
+    if (i == 2) sects.push('dist')
+
+    sects.push(`server.js`)
     const file = Path.resolve(...sects)
     if (fs.existsSync(file)) {
-      const modulePath = `../../projects/${sects.filter((_, i) => i).join('/')}`
+      const modulePath = `../projects/${sects.filter((_, i) => i).join('/')}`
       console.log(`Attempting to load module from ${modulePath}`)
       try {
         const serverModule = await import(modulePath)
@@ -33,7 +41,7 @@ const loadServerModule = async (project) => {
   console.log(
     `No server file found for ${project}, assuming it's a static project`,
   )
-  server.use(`/${project}`, express.static(Path.resolve(projectsDir, project)))
+  server.use(`/${project}`, express.static(Path.resolve('projects', project)))
 }
 
 fs.readdir(projectsDir, async (err, projects) => {

@@ -76,7 +76,14 @@ export default function SecretPage() {
       )
       setTimeout(() => {
         if (result) {
-          window.location.href = result
+          // If a redirect, then follow it
+          if (result.location) window.location.href = result.location
+          // If a snippet of css, then apply it
+          if (result.styles) {
+            const style = document.createElement('style')
+            style.innerHTML = result.styles
+            document.head.appendChild(style)
+          }
         }
 
         input?.parentElement?.parentElement?.classList.remove(

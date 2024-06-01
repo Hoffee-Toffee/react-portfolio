@@ -3,6 +3,7 @@ import { useSneezes } from '../hooks/useSneezes.js'
 import { useEffect, useState } from 'react'
 import '../styles/home.scss'
 import '../styles/blog.scss'
+import me from '../images/Me.png'
 
 function Home() {
   // Now
@@ -103,7 +104,7 @@ function Home() {
     <div id="main">
       <div id="content">
         <div id="top-box">
-          <img id="me" src="/client/images/Me.png" alt="Me" />
+          <img id="me" src={me} alt="Me" />
           <div id="right-col">
             <h1>Welcome to my portfolio!</h1>
             <ul>

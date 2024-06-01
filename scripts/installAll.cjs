@@ -8,8 +8,34 @@ function runNpmInstall(directory) {
   execSync('npm i', { cwd: directory, stdio: 'inherit' });
 }
 
-// Run npm install for the main project (one level above this file)
-runNpmInstall(path.join(__dirname, '../'))
+// Function to check if a package.json file contains a build script
+function canBuild(directory) {
+  const packageJsonPath = path.join(directory, 'package.json');
+  if (fs.existsSync(packageJsonPath)) {
+    const packageJson = require(packageJsonPath);
+    return packageJson && packageJson.scripts && packageJson.scripts.build;
+  }
+  return false;
+}
+
+// Function to run npm run build for a given directory (if existing)
+function runBuild(directory, project) {
+  if (canBuild(directory)) {
+    console.log(`Running npm run build in ${directory}`);
+    // Add a root path so it knows where to host it
+    let base = `/projects/${project}/`;
+    // Set base in that package's config
+    const packageJsonPath = path.join(directory, 'package.json');
+    const packageJson = require(packageJsonPath);
+    packageJson.config = packageJson.config || {};
+    packageJson.config.base = base
+    // packageJson.config.assets_dir = "assets";
+
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+    execSync('npm run build', { cwd: directory, stdio: 'inherit' });
+  }
+}
+
 
 // Run npm install for all submodules under projects directory
 const projectsDir = path.join(__dirname, '../', 'projects');
@@ -17,5 +43,6 @@ fs.readdirSync(projectsDir).forEach(project => {
   const projectPath = path.join(projectsDir, project);
   if (fs.statSync(projectPath).isDirectory()) {
     runNpmInstall(projectPath);
+    runBuild(projectPath, project)
   }
 });
