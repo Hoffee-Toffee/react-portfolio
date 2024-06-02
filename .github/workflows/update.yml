@@ -22,4 +22,4 @@ jobs:
           git submodule update --remote
           git add .
           git commit -m "Updated Submodules"
-          git push origin main
+          git push origin main || true
