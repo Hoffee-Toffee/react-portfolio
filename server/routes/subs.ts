@@ -30,6 +30,7 @@ const loadServerModule = async (project: string) => {
         const serverModule = await import(modulePath)
         console.log(`Module loaded successfully from ${modulePath}`)
         server.use(`/${project}`, serverModule.default)
+        server.use(`/${project}/*`, serverModule.default)
         console.log(`Loaded ${modulePath} for ${project}`)
         return
       } catch (err) {

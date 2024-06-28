@@ -6,6 +6,7 @@ import Blog from './components/Blog'
 import BlogPage from './components/BlogPage'
 import Projects from './components/Projects'
 import Secret from './components/Secret'
+import Project from './components/Project.tsx'
 
 export default createRoutesFromElements(
   <>
