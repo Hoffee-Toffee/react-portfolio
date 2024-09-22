@@ -7,8 +7,8 @@ RUN npm ci
 
 # Download and install the prebuilt FFmpeg binary
 RUN apk add --no-cache wget tar xz && \
-    wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-i686-static.tar.xz && \
-    tar -xJf ffmpeg-release-i686-static.tar.xz && \
+    wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-4.2.2-i686-static.tar.xz && \
+    tar -xJf ffmpeg-release-4.2.2-i686-static.tar.xz && \
     cp ffmpeg-*/ffmpeg /usr/local/bin/ffmpeg && \
     cp ffmpeg-*/ffprobe /usr/local/bin/ffprobe && \
     rm -rf ffmpeg-* && \
