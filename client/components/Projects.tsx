@@ -31,8 +31,8 @@ export default function ProjectsPage() {
           <a href={repo.html_url} target="_blank" rel="noreferrer">
             View Repo
           </a>
-          {repo.hosted && (
-            <a href={`projects/${repo.name}/`} target="_blank" rel="noreferrer">
+          {(repo.hosted || repo.homepage) && (
+            <a href={repo.homepage || `projects/${repo.name}/`} target="_blank" rel="noreferrer">
               Run Repo
             </a>
           )}
