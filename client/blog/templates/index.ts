@@ -1,0 +1,7 @@
+export { default as Text } from './Text.tsx'
+export { default as Heading } from './Heading.tsx'
+export { default as Image } from './Image.tsx'
+export { default as Gallery } from './Gallery.tsx'
+export { default as Code } from './Code.tsx'
+export { default as List } from './List.tsx'
+export { default as Section } from './Section.tsx'

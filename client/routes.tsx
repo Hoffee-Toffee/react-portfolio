@@ -6,16 +6,14 @@ import Blog from './components/Blog'
 import BlogPage from './components/BlogPage'
 import Projects from './components/Projects'
 import Secret from './components/Secret'
-import Project from './components/Project.tsx'
 
 export default createRoutesFromElements(
   <>
     <Route path="/" element={<Layout />}>
       <Route index element={<Home />} />
       <Route path="/interests" element={<Interests />} />
-      <Route path="/blog" element={<Blog />}>
-        <Route path="./:blog" element={<BlogPage />} />
-      </Route>
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:blog" element={<BlogPage />} />
 
       <Route path="/projects" element={<Projects />} />
       <Route path="/secret" element={<Secret />} />

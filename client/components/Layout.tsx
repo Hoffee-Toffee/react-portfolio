@@ -52,7 +52,7 @@ export default function Layout() {
         <footer style={{ opacity: 0, pointerEvents: 'none' }}>
           <span>
             <a href="https://www.github.com/Hoffee-Toffee">Tristan Bulmer</a>{' '}
-            2023
+            2026
           </span>
         </footer>
       )}
