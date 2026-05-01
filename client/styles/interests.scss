@@ -127,9 +127,15 @@ html#interestsPage {
   }
 
   #interests #movies-tv {
-    background-image: url('../images/oppenheimer.png');
-    background-color: #00000080;
-    background-blend-mode: multiply;
+    background-image: url('../images/Adrian.png');
+  }
+
+  #interests #movies-tv:has(.petrova-mode) {
+    background-image: url('../images/Petrova_Adrian.png');
+  }
+
+  #movies-tv .petrova-mode #grace {
+    background-image: url('../images/Petrova_Grace.png');
   }
 
   #interests #other {
@@ -252,16 +258,106 @@ html#interestsPage {
     right: 25%;
   }
 
-  #movies-tv #memento {
-    background-image: url('../images/memento.png');
-    width: calc(50vw - 1em);
-    height: calc(100dvh - 2em);
-    background-size: contain, 50%;
-    background-position: left;
+  #movies-tv #grace-scale {
+    position: absolute;
+    width: 100vw;
+    height: 100dvh;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    will-change: scale;
+    cursor: pointer;
+    z-index: 0;
+    animation: grace-scale 37s linear infinite;
+  }
+
+  #movies-tv #grace-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+
+    &.black {
+      background: #000;
+      opacity: 1;
+      transition: none;
+    }
+
+    &.white-in {
+      background: #fff;
+      mix-blend-mode: plus-lighter;
+      opacity: 0.5;
+      transition: none;
+    }
+
+    &.white-fade {
+      background: #fff;
+      opacity: 0;
+      mix-blend-mode: plus-lighter;
+      transition: opacity 1s ease-out;
+    }
+  }
+
+  #movies-tv .bg {
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  #movies-tv #grace-rotate {
+    width: 100vw;
+    height: 100dvh;
+    transform-origin: 33% 50%;
+    will-change: rotate;
+    animation: grace-rotate 55s linear infinite;
+  }
+
+  #movies-tv #grace {
+    background-image: url('../images/Grace.png');
+    width: 106vw;
+    height: 106dvh;
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
-    left: 1em;
-    border-top: solid 1.5em transparent;
-    opacity: 0.75;
+    top: -3dvh;
+    left: -3vw;
+    will-change: translate;
+    animation: grace-drift-v 47s linear infinite, grace-drift-h 67s linear infinite;
+  }
+
+  @keyframes grace-drift-v {
+    0%   { translate: 0 0vh;        animation-timing-function: ease-in-out; }
+    18%  { translate: 0 -2vh;       animation-timing-function: ease-in-out; }
+    43%  { translate: 0 0.8vh;      animation-timing-function: ease-in-out; }
+    67%  { translate: 0 -0.5vh;     animation-timing-function: ease-in-out; }
+    83%  { translate: 0 1.5vh;      animation-timing-function: ease-in-out; }
+    100% { translate: 0 0vh; }
+  }
+
+  @keyframes grace-drift-h {
+    0%   { translate: 0vw 0;        animation-timing-function: ease-in-out; }
+    17%  { translate: -1.2vw 0;     animation-timing-function: ease-in-out; }
+    38%  { translate: 0.5vw 0;      animation-timing-function: ease-in-out; }
+    58%  { translate: 1.8vw 0;      animation-timing-function: ease-in-out; }
+    79%  { translate: -0.8vw 0;     animation-timing-function: ease-in-out; }
+    100% { translate: 0vw 0; }
+  }
+
+  @keyframes grace-scale {
+    0%   { scale: 1;      animation-timing-function: ease-in-out; }
+    15%  { scale: 1.03;   animation-timing-function: ease-in-out; }
+    41%  { scale: 0.98;   animation-timing-function: ease-in-out; }
+    63%  { scale: 1.02;   animation-timing-function: ease-in-out; }
+    82%  { scale: 0.99;   animation-timing-function: ease-in-out; }
+    100% { scale: 1; }
+  }
+
+  @keyframes grace-rotate {
+    0%   { rotate: 0deg;        animation-timing-function: ease-in-out; }
+    22%  { rotate: -6deg;       animation-timing-function: ease-in-out; }
+    53%  { rotate: 2deg;        animation-timing-function: ease-in-out; }
+    77%  { rotate: 3.5deg;      animation-timing-function: ease-in-out; }
+    100% { rotate: 0deg; }
   }
 
   @keyframes position {

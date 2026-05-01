@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { Link } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 
 import InterestSection from './InterestSection'
 import '../styles/interests.scss'
@@ -11,12 +11,78 @@ export default function Interests() {
     document.body.parentElement.id = 'interestsPage'
   }, [])
 
+  const [petrova, setPetrova] = useState(false)
+  const [overlay, setOverlay] = useState<'none' | 'black' | 'white-in' | 'white-fade'>('none')
+  const cooldownRef = useRef(false)
+
+  const handleGraceClick = useCallback(() => {
+    if (cooldownRef.current) return
+    cooldownRef.current = true
+
+    // Phase 1: black out
+    setOverlay('black')
+
+    setTimeout(() => {
+      // Phase 2: swap images + instant white flash
+      setPetrova(p => !p)
+      setOverlay('white-in')
+
+      setTimeout(() => {
+        // Phase 3: hold 250 ms then begin fade
+        setOverlay('white-fade')
+
+        // Reset after fade completes so there's no stale state on next click
+        setTimeout(() => setOverlay('none'), 1500)
+      }, 250)
+    }, 150)
+
+    // Re-enable after 5 s
+    setTimeout(() => {
+      cooldownRef.current = false
+    }, 2000)
+  }, [])
+
   const interests = [
+    <InterestSection
+      id="movies-tv"
+      content={
+        <div className={petrova ? 'petrova-mode' : undefined}>
+          <div id="grace-scale" onClick={handleGraceClick}>
+            <div id="grace-rotate">
+              <div className="fg-img" id="grace" data-parallax="scroll-up" data-parallax-speed="0.2"></div>
+            </div>
+          </div>
+          <div id="grace-overlay" className={overlay}></div>
+
+          <div className="bg">
+            <div className="content">
+              <h1>Movies and TV</h1>
+              <p>
+                Here is a list of some of my favourite movies and TV shows...
+              </p>
+
+              <ul>
+                <li>Project Hail Mary</li>
+                <li>Oppenheimer</li>
+                <li>Saw</li>
+                <li>Inception</li>
+                <li>Better Call Saul</li>
+                <li>Memento</li>
+                <li>Breaking Bad</li>
+                <li>Tenet</li>
+                <li>Back to the Future</li>
+                <li>The Martian</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      }
+    />,
     <InterestSection
       id="dead-space"
       content={
         <>
-          <div className="fg-img" id="isaac-clarke"></div>
+          <div className="fg-img" id="isaac-clarke" data-parallax="float-fade" data-parallax-fade-out="0.5"></div>
 
           <div className="bg">
             <div className="content">
@@ -52,7 +118,7 @@ export default function Interests() {
       content={
         <>
           {' '}
-          <div className="fg-img" id="github"></div>
+          <div className="fg-img" id="github" data-parallax="scroll-up" data-parallax-speed="0.5"></div>
           <div className="bg">
             <div className="content">
               <h1>Programming</h1>
@@ -88,7 +154,7 @@ export default function Interests() {
         <>
           {' '}
           <div id="scroll">
-            <div className="fg-img" id="starship"></div>
+            <div className="fg-img" id="starship" data-parallax="scroll-up" data-parallax-speed="0.333" data-parallax-target="#scroll"></div>
           </div>
           <div className="bg">
             <div className="content">
@@ -130,7 +196,7 @@ export default function Interests() {
       id="games"
       content={
         <>
-          <div id="tetronimos">
+          <div id="tetronimos" data-parallax="scroll-up" data-parallax-speed="0.25">
             <div className="fg-img" id="l-block"></div>
             <div className="fg-img" id="o-block"></div>
             <Link to="/secret">
@@ -159,37 +225,6 @@ export default function Interests() {
                 <li>Superliminal</li>
                 <li>Tetris</li>
                 <li>The Stanley Parable</li>
-              </ul>
-            </div>
-          </div>
-        </>
-      }
-    />,
-    <InterestSection
-      id="movies-tv"
-      content={
-        <>
-          <div className="fg-img" id="memento"></div>
-
-          <div className="bg">
-            <div className="content">
-              <h1>Movies and TV</h1>
-              <p>
-                Here is a list of some of my favourite movies and TV shows...
-              </p>
-
-              <ul>
-                <li>Oppenheimer</li>
-                <li>Saw</li>
-                <li>Inception</li>
-                <li>Better Call Saul</li>
-                <li>Memento</li>
-                <li>Breaking Bad</li>
-                <li>Tenet</li>
-                <li>Back to the Future</li>
-                <li>The Imitation Game</li>
-                <li>WarGames</li>
-                <li>The Simpsons</li>
               </ul>
             </div>
           </div>

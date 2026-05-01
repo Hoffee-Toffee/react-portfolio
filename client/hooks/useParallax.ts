@@ -1,205 +1,140 @@
-import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+// ─── Parallax method reference ────────────────────────────────────────────────
+//
+// Apply data attributes directly to the fg element (or any element in a slide):
+//
+//   data-parallax="scroll-up"
+//     Continuous parallax drift through both entry and exit — element starts
+//     low on entry and drifts upward throughout.
+//     data-parallax-speed="0.5"   (default: 0.5 — fraction of scroll distance to drift;
+//                                  0 = static, 1 = moves as fast as the scroll)
+//     data-parallax-target="#id"  (optional — CSS selector of the element to transform;
+//                                  defaults to the element itself)
+//
+//   data-parallax="float-fade"
+//     Entry: drifts up from below, fades in over the second half of entry.
+//     Exit:  stays static, fades out immediately.
+//     Always uses speed 0.5.
+//     data-parallax-fade-out="1.0" (default: 1.0 — fraction of viewportHeight at which
+//                                   opacity reaches 0; 0.5 = fades out at half scroll-away)
+//     data-parallax-target="#id"  (optional, same as above)
+//
+// The .bg class parallax is generic and needs no data attributes.
+// ─────────────────────────────────────────────────────────────────────────────
 
 const useParallax = () => {
-  // interests.style.paddingRight =
-  //   interests.offsetWidth - interests.clientWidth + 'px'
+  const scrollBody = document.getElementById('interests') as HTMLElement
+  if (!scrollBody) return null
 
-  // Secrets
-  // document.getElementById('s-block').addEventListener('click', function () {
-  //   window.location.href = window.location.origin + '/src/secret/secret.html'
-  // })
-
-  // Creates parallax effects based on the scroll position
-  // Controls opacity and the position of elements
-  const scrollBody = document.getElementById('interests')
-
-  // Get the height of the 'interests' element
   const viewportHeight = scrollBody.offsetHeight
-
-  // Get the scroll position of the 'interests' element
   const scrollPosition = scrollBody.scrollTop
 
-  // Get all .fg-img elements as an array
-  let fgImgs = Array.from(document.getElementsByClassName('fg-img'))
-
-  // Also add the tetronimos element to the array
-  fgImgs.push(document.getElementById('tetronimos'))
-
+  // Lazy-load images that declare a data-src attribute
+  const lazyImgs = Array.from(scrollBody.querySelectorAll('[data-src]'))
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        const img = entry.target
+        const img = entry.target as HTMLElement
         const src = img.getAttribute('data-src')
-        img.setAttribute('src', src)
+        if (src) img.setAttribute('src', src)
         observer.unobserve(img)
       }
     })
   })
+  lazyImgs.forEach((img) => observer.observe(img))
 
-  fgImgs.forEach((img) => {
-    observer.observe(img)
+  // ── Data-attribute driven parallax ─────────────────────────────────────────
+  const parallaxEls = Array.from(
+    scrollBody.querySelectorAll('[data-parallax]'),
+  ) as HTMLElement[]
+
+  parallaxEls.forEach((el) => {
+    const method = el.getAttribute('data-parallax')
+
+    // Resolve optional transform target
+    const targetSelector = el.getAttribute('data-parallax-target')
+    const target: HTMLElement = targetSelector
+      ? (scrollBody.querySelector(targetSelector) as HTMLElement) ?? el
+      : el
+
+    // slideStart is the scrollPosition at which the slide is fully in view.
+    // Since the scroll container == viewportHeight and each slide == viewportHeight,
+    // parentSlide.offsetTop is exactly that scroll position.
+    const parentSlide = el.closest('.interest') as HTMLElement | null
+    const slideStart = parentSlide ? parentSlide.offsetTop : 0
+
+    // localScroll: 0 when the slide first enters view, viewportHeight when leaving.
+    const localScroll = scrollPosition - slideStart
+
+    // ── scroll-up ─────────────────────────────────────────────────────────────
+    // Continuous parallax through both entry and exit.
+    // data-parallax-speed controls the drift fraction (0 = static, 1 = matches scroll).
+    if (method === 'scroll-up') {
+      const speed = parseFloat(el.getAttribute('data-parallax-speed') ?? '0.5')
+      target.style.transform = `translateY(${-localScroll * speed}px)`
+    }
+
+    // ── float-fade ────────────────────────────────────────────────────────────
+    // Entry  (localScroll < 0): drifts in from below, fades in over the second
+    //                           half of entry (absScroll ½→1 viewport).
+    // In view (localScroll = 0): natural position, fully visible.
+    // Exit   (localScroll > 0): stays static, fades out immediately,
+    //                           reaching opacity 0 by localScroll = viewportHeight.
+    if (method === 'float-fade') {
+      if (localScroll <= 0) {
+        // Entry: drift up from a lower starting point + fade in
+        target.style.transform = `translateY(${-localScroll * 0.5}px)`
+        const absScroll = Math.abs(localScroll)
+        const halfWindow = viewportHeight / 2
+        if (absScroll <= halfWindow) {
+          target.style.opacity = '1'
+        } else if (absScroll <= viewportHeight) {
+          target.style.opacity = String(
+            1 - (absScroll - halfWindow) / halfWindow,
+          )
+        } else {
+          target.style.opacity = '0'
+        }
+      } else {
+        // Exit: hold position, fade out over fadeOutDistance
+        const fadeOutDistance =
+          parseFloat(el.getAttribute('data-parallax-fade-out') ?? '1') *
+          viewportHeight
+        target.style.transform = 'translateY(0px)'
+        target.style.opacity =
+          localScroll <= fadeOutDistance
+            ? String(1 - localScroll / fadeOutDistance)
+            : '0'
+      }
+    }
   })
 
-  // Remove all elements from the array that are not visible
-  fgImgs = fgImgs.filter((el) => {
-    return (
-      el.getBoundingClientRect().top < viewportHeight &&
-      el.getBoundingClientRect().bottom > 0
-    )
-  })
+  // ── Generic .bg parallax ───────────────────────────────────────────────────
+  // All .bg divs get a scroll-based translateY automatically — no config needed.
+  const divs = Array.from(
+    scrollBody.getElementsByClassName('bg'),
+  ) as HTMLElement[]
 
-  // Style the remaining elements according to their group or id
-
-  // Down-in: When the user transitions into this element from the element above
-  // Down-out: When the user transitions from this element into the element below
-  // Up-in: When the user transitions from the element below into this element
-  // Up-out: When the user transitions from this element into the element above
-
-  if (fgImgs.includes(document.getElementById('isaac-clarke'))) {
-    // Isaac Clarke
-    // Float up on down-in, and down on up-out
-    // Fades out on down-out, and fades in on up-in
-    const fgImg = document.getElementById('isaac-clarke')
-    // Down-in & Up-out
-    if (
-      scrollPosition >= viewportHeight * 0.5 - fgImg.offsetHeight / 2 &&
-      scrollPosition <= viewportHeight * 0.5 + fgImg.offsetHeight / 2
-    ) {
-      const changeInPosition = scrollPosition * 0.5 - fgImg.offsetHeight / 2
-      fgImg.style.transform = 'translateY(' + -changeInPosition + 'px)'
-      fgImg.style.opacity = 1
-    }
-    // Above
-    else if (scrollPosition < viewportHeight * 0.5 - fgImg.offsetHeight / 2) {
-      fgImg.style.transform = 'translateY(0px)'
-      fgImg.style.opacity = 1
-    }
-    // Down-out & Up-in
-    else if (
-      scrollPosition > viewportHeight * 0.5 + fgImg.offsetHeight / 2 &&
-      scrollPosition < viewportHeight * 0.5 + fgImg.offsetHeight
-    ) {
-      fgImg.style.opacity =
-        1 -
-        (scrollPosition - (viewportHeight * 0.5 + fgImg.offsetHeight / 2)) /
-          (fgImg.offsetHeight / 2)
-      fgImg.style.transform = 'translateY(0px'
-    }
-    // Below
-    else if (scrollPosition > viewportHeight / 2 + fgImg.offsetHeight) {
-      fgImg.style.opacity = '0'
-    }
-  }
-
-  if (fgImgs.includes(document.getElementById('github'))) {
-    // Github
-    // Like Stark
-    const fgImg = document.getElementById('github')
-    // Down-in & Up-out & Down-out & Up-in
-    if (
-      scrollPosition >= viewportHeight * 1.5 - fgImg.offsetHeight / 2 &&
-      scrollPosition <= viewportHeight * 1.5 + fgImg.offsetHeight * 2.5
-    ) {
-      const changeInPosition = scrollPosition / 2 - fgImg.offsetHeight
-      fgImg.style.transform = 'translateY(' + -changeInPosition + 'px)'
-    }
-    // Above
-    else if (scrollPosition < viewportHeight * 1.5 - fgImg.offsetHeight / 2) {
-      fgImg.style.transform = 'translateY(0px)'
-    }
-  }
-
-  if (fgImgs.includes(document.getElementById('starship'))) {
-    // Starship
-    const fgImg = document.getElementById('scroll')
-    // Down-in & Up-out & Down-out & Up-in
-    if (
-      scrollPosition >= viewportHeight * 2.5 - fgImg.offsetHeight / 2 &&
-      scrollPosition <= viewportHeight * 2.5 + fgImg.offsetHeight * 2.5
-    ) {
-      const changeInPosition = scrollPosition / 3 - fgImg.offsetHeight
-      fgImg.style.transform = 'translateY(' + -changeInPosition + 'px)'
-    }
-    // Above
-    else if (scrollPosition < viewportHeight * 2.5 - fgImg.offsetHeight / 2) {
-      fgImg.style.transform = 'translateY(0px)'
-    }
-  }
-
-  if (fgImgs.includes(document.getElementById('tetronimos'))) {
-    // Tetronimos
-    // Like Stark
-    const fgImg = document.getElementById('tetronimos')
-    // Down-in & Up-out & Down-out & Up-in
-    if (
-      scrollPosition >= viewportHeight * 3.5 - fgImg.offsetHeight / 2 &&
-      scrollPosition <= viewportHeight * 3.5 + fgImg.offsetHeight * 2.5
-    ) {
-      const changeInPosition = scrollPosition / 4 - fgImg.offsetHeight
-      fgImg.style.transform = 'translateY(' + -changeInPosition + 'px)'
-    }
-    // Above
-    else if (scrollPosition < viewportHeight * 3.5 - fgImg.offsetHeight / 2) {
-      fgImg.style.transform = 'translateY(0px)'
-    }
-  }
-
-  if (fgImgs.includes(document.getElementById('memento'))) {
-    // Memento
-    // Like Stark
-    const fgImg = document.getElementById('memento')
-    // Down-in & Up-out & Down-out & Up-in
-    if (
-      scrollPosition >= viewportHeight * 4.5 - fgImg.offsetHeight / 2 &&
-      scrollPosition <= viewportHeight * 4.5 + fgImg.offsetHeight * 2.5
-    ) {
-      const changeInPosition = scrollPosition / 5 - fgImg.offsetHeight
-      fgImg.style.transform = 'translateY(' + -changeInPosition + 'px)'
-    }
-    // Above
-    else if (scrollPosition < viewportHeight * 4.5 - fgImg.offsetHeight / 2) {
-      fgImg.style.transform = 'translateY(0px)'
-    }
-  }
-
-  // Get all .bg divs in the 'interests' element as an array
-  const divs = Array.from(scrollBody.getElementsByClassName('bg'))
-
-  // Loop through each .bg div
   divs.forEach((div) => {
-    // Check if between the start and end of the parallax effect
-    // Parallax effect starts once you reach the 'interest' element that the div is in
-    // Parallax effect ends once you reach the 'interest' element that the div is in
+    const parentNode = (div.closest('.interest') ??
+      div.parentElement) as HTMLElement
     if (
-      scrollPosition >= div.parentNode.offsetTop - viewportHeight / 2 &&
+      scrollPosition >= parentNode.offsetTop - viewportHeight / 2 &&
       scrollPosition <=
-        div.parentNode.offsetTop +
-          div.parentNode.offsetHeight -
-          viewportHeight / 2
+        parentNode.offsetTop + parentNode.offsetHeight - viewportHeight / 2
     ) {
-      // Calculate the change in position
       const changeInPosition =
         scrollPosition -
-        div.parentNode.offsetTop -
+        parentNode.offsetTop -
         viewportHeight / 2 +
         div.offsetHeight / 2
-
-      // Change the position of the div
-      div.style.transform = 'translateY(' + -changeInPosition + 'px)'
+      div.style.transform = `translateY(${-changeInPosition}px)`
       div.style.visibility = 'visible'
-    }
-    // Check if before the start of the parallax effect
-    else if (scrollPosition < div.parentNode.offsetTop - viewportHeight / 2) {
+    } else if (scrollPosition < parentNode.offsetTop - viewportHeight / 2) {
       div.style.visibility = 'hidden'
-    }
-    // Check if after the end of the parallax effect, don't apply to the last .bg div
-    else if (
+    } else if (
       scrollPosition >
-        div.parentNode.offsetTop +
-          div.parentNode.offsetHeight -
-          viewportHeight / 2 &&
-      div != divs[divs.length - 1]
+        parentNode.offsetTop + parentNode.offsetHeight - viewportHeight / 2 &&
+      div !== divs[divs.length - 1]
     ) {
       div.style.transform = 'translateY(0)'
       div.style.visibility = 'hidden'
