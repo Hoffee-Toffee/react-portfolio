@@ -126,12 +126,34 @@ html#interestsPage {
     }
   }
 
+  #movies-tv-zone {
+    height: 200dvh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
   #interests #movies-tv {
     background-image: url('../images/Adrian.png');
+    position: sticky;
+    top: 0;
+    scroll-snap-align: none;
   }
 
   #interests #movies-tv:has(.petrova-mode) {
     background-image: url('../images/Petrova_Adrian.png');
+  }
+
+  #movies-tv-snap2 {
+    height: 100dvh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  /* Restore right-side bg: zone wrapping changed nth-child parity */
+  #movies-tv .bg {
+    left: 50%;
+    right: 0%;
+    margin-left: 0;
   }
 
   #movies-tv .petrova-mode #grace {
@@ -281,7 +303,6 @@ html#interestsPage {
     left: 0;
     overflow: hidden;
     will-change: scale;
-    cursor: pointer;
     z-index: 1;
     animation: grace-scale 37s linear infinite;
   }
@@ -320,8 +341,7 @@ html#interestsPage {
     transition: opacity 0.5s ease;
   }
 
-  #movies-tv .movies-tv-content:has(#grace-overlay.black) .bg,
-  #movies-tv .movies-tv-content.petrova-mode .bg {
+  #movies-tv .movies-tv-content:has(#grace-overlay.black) .bg {
     opacity: 0;
     transition: none;
   }

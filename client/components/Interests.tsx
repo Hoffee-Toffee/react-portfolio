@@ -14,72 +14,50 @@ export default function Interests() {
 
   const [petrova, setPetrova] = useState(false)
   const [overlay, setOverlay] = useState<'none' | 'black' | 'white-in' | 'white-fade'>('none')
-  const cooldownRef = useRef(false)
+  // const cooldownRef = useRef(false)
+  const petrovaRef = useRef(false)
 
-  const handleGraceClick = useCallback(() => {
-    if (cooldownRef.current) return
-    cooldownRef.current = true
+  const triggerTransition = useCallback((toOn: boolean) => {
+    // if (cooldownRef.current) return
+    if (petrovaRef.current === toOn) return
+    // cooldownRef.current = true
 
-    // Phase 1: black out
     setOverlay('black')
-
     setTimeout(() => {
-      // Phase 2: swap images + instant white flash
-      setPetrova(p => !p)
+      petrovaRef.current = toOn
+      setPetrova(toOn)
       setOverlay('white-in')
-
       setTimeout(() => {
-        // Phase 3: hold 250 ms then begin fade
         setOverlay('white-fade')
-
-        // Reset after fade completes so there's no stale state on next click
         setTimeout(() => setOverlay('none'), 1500)
       }, 250)
     }, 150)
 
-    // Re-enable after 5 s
-    setTimeout(() => {
-      cooldownRef.current = false
-    }, 1500)
+    // setTimeout(() => { cooldownRef.current = false }, 1500)
   }, [])
 
-  const interests = [
-    <InterestSection
-      id="movies-tv"
-      content={
-        <div className={`movies-tv-content${petrova ? ' petrova-mode' : ''}`}>
-          <Astrophage active={petrova} />
-          <div id="grace-scale" onClick={handleGraceClick}>
-            <div id="grace-rotate">
-              <div className="fg-img" id="grace" data-parallax="scroll-up" data-parallax-speed="0.2"></div>
-            </div>
-          </div>
-          <div id="grace-overlay" className={overlay}></div>
+  useEffect(() => {
+    const interestsEl = document.getElementById('interests')
+    if (!interestsEl) return
 
-          <div className="bg">
-            <div className="content">
-              <h1>Movies and TV</h1>
-              <p>
-                Here is a list of some of my favourite movies and TV shows...
-              </p>
-
-              <ul>
-                <li>Project Hail Mary</li>
-                <li>Oppenheimer</li>
-                <li>Saw</li>
-                <li>Inception</li>
-                <li>Better Call Saul</li>
-                <li>Memento</li>
-                <li>Breaking Bad</li>
-                <li>Tenet</li>
-                <li>Back to the Future</li>
-                <li>The Martian</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+    const handleScroll = () => {
+      const snap2El = document.getElementById('movies-tv-snap2')
+      if (!snap2El) return
+      const p2Top = snap2El.getBoundingClientRect().top + interestsEl.scrollTop
+      const p1Top = p2Top - window.innerHeight
+      const scrollTop = interestsEl.scrollTop
+      if (!petrovaRef.current && scrollTop >= p2Top) {
+        triggerTransition(true)
+      } else if (petrovaRef.current && scrollTop <= p1Top) {
+        triggerTransition(false)
       }
-    />,
+    }
+
+    interestsEl.addEventListener('scroll', handleScroll)
+    return () => interestsEl.removeEventListener('scroll', handleScroll)
+  }, [triggerTransition])
+
+  const interests = [
     <InterestSection
       id="dead-space"
       content={
@@ -232,97 +210,7 @@ export default function Interests() {
           </div>
         </>
       }
-    />,
-    <InterestSection
-      id="other"
-      content={
-        <>
-          {' '}
-          <div className="fg-img" id="kurzgesagt-bird"></div>
-          <div className="fg-img" id="kurzgesagt-black-hole"></div>
-          <div className="bg">
-            <div className="content">
-              <h1>Other</h1>
-              <p>
-                Here is a list of some links to YouTube channels and other
-                things that I enjoy...
-              </p>
-
-              <ul>
-                <li>
-                  <a
-                    href="https://www.youtube.com/Computerphile"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Computerphile
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="https://www.youtube.com/Veritasium"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Veritasium
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="https://www.youtube.com/Kurzgesagt"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Kurzgesagt
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="https://www.youtube.com/Vsauce"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Vsauce
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.youtube.com/SabineHossenfelder"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Sabine Hossenfelder
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="https://www.youtube.com/Numberphile"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Numberphile
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="https://waitbutwhy.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Wait But Why
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </>
-      }
-    />,
+    />
   ]
 
   return (
@@ -341,11 +229,44 @@ export default function Interests() {
         props: { ...interest.props, index },
         key: `Interest ${index + 1}`,
       }))}
-      <div className="title-card" id="interests-end">
-        <div className="content">
-          <h1>End of Interests</h1>
-          <p>Yep, that's about it.</p>
+      <div id="movies-tv-zone">
+        <div id="movies-tv" className="interest">
+          <div className={`movies-tv-content${petrova ? ' petrova-mode' : ''}`}>
+            <Astrophage active={petrova} />
+            <div id="grace-scale">
+              <div id="grace-rotate">
+                <div className="fg-img" id="grace" data-parallax="scroll-up" data-parallax-speed="0.2"></div>
+              </div>
+            </div>
+            <div id="grace-overlay" className={overlay}></div>
+
+            <div className="bg">
+              <div className="content">
+                <h1>Movies and TV</h1>
+                <p>
+                  Here is a list of some of my favourite movies and TV shows...
+                </p>
+
+                <ul>
+                  <li>Project Hail Mary</li>
+                  <li>Oppenheimer</li>
+                  <li>Saw</li>
+                  <li>Inception</li>
+                  <li>Better Call Saul</li>
+                  <li>Memento</li>
+                  <li>Breaking Bad</li>
+                  <li>Tenet</li>
+                  <li>Back to the Future</li>
+                  <li>The Martian</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <span className="scroll-indicator">
+            <i className="fa fa-chevron-down" aria-hidden="true"></i>
+          </span>
         </div>
+        <div id="movies-tv-snap2"></div>
       </div>
     </div>
   )

@@ -27,6 +27,12 @@ const useParallax = () => {
 
   const viewportHeight = scrollBody.offsetHeight
   const scrollPosition = scrollBody.scrollTop
+  const scrollBodyRect = scrollBody.getBoundingClientRect()
+
+  // Returns the stable offset of el from the top of the scroll container,
+  // regardless of scroll position. Reliable for sticky elements.
+  const getScrollOffset = (el: HTMLElement): number =>
+    el.getBoundingClientRect().top - scrollBodyRect.top + scrollPosition
 
   // Lazy-load images that declare a data-src attribute
   const lazyImgs = Array.from(scrollBody.querySelectorAll('[data-src]'))
@@ -59,8 +65,17 @@ const useParallax = () => {
     // slideStart is the scrollPosition at which the slide is fully in view.
     // Since the scroll container == viewportHeight and each slide == viewportHeight,
     // parentSlide.offsetTop is exactly that scroll position.
+    // For sticky slides, use getBoundingClientRect on the snap1 parent wrapper
+    // to get the stable scroll-container offset, avoiding offsetTop=0 from sticky.
     const parentSlide = el.closest('.interest') as HTMLElement | null
-    const slideStart = parentSlide ? parentSlide.offsetTop : 0
+    const isSticky = parentSlide
+      ? getComputedStyle(parentSlide).position === 'sticky'
+      : false
+    const slideStart = parentSlide
+      ? isSticky
+        ? getScrollOffset(parentSlide.parentElement as HTMLElement)
+        : parentSlide.offsetTop
+      : 0
 
     // localScroll: 0 when the slide first enters view, viewportHeight when leaving.
     const localScroll = scrollPosition - slideStart
@@ -68,9 +83,12 @@ const useParallax = () => {
     // ── scroll-up ─────────────────────────────────────────────────────────────
     // Continuous parallax through both entry and exit.
     // data-parallax-speed controls the drift fraction (0 = static, 1 = matches scroll).
+    // For sticky slides: clamp localScroll to 0 so the element only drifts during
+    // entry (title card → P1) and stays frozen at its natural position through the zone.
     if (method === 'scroll-up') {
       const speed = parseFloat(el.getAttribute('data-parallax-speed') ?? '0.5')
-      target.style.transform = `translateY(${-localScroll * speed}px)`
+      const effectiveScroll = isSticky ? Math.min(localScroll, 0) : localScroll
+      target.style.transform = `translateY(${-effectiveScroll * speed}px)`
     }
 
     // ── float-fade ────────────────────────────────────────────────────────────
@@ -117,23 +135,30 @@ const useParallax = () => {
   divs.forEach((div) => {
     const parentNode = (div.closest('.interest') ??
       div.parentElement) as HTMLElement
+    // For sticky elements: effectiveOffsetTop from the zone (parentElement),
+    // zoneHeight from the zone itself (NOT grandparent — that would be #interests = 100dvh).
+    const isSticky = getComputedStyle(parentNode).position === 'sticky'
+    const effectiveOffsetTop = isSticky
+      ? getScrollOffset(parentNode.parentElement as HTMLElement)
+      : parentNode.offsetTop
+    const zoneHeight = isSticky
+      ? parentNode.parentElement?.offsetHeight ?? parentNode.offsetHeight
+      : parentNode.offsetHeight
     if (
-      scrollPosition >= parentNode.offsetTop - viewportHeight / 2 &&
-      scrollPosition <=
-        parentNode.offsetTop + parentNode.offsetHeight - viewportHeight / 2
+      scrollPosition >= effectiveOffsetTop - viewportHeight / 2 &&
+      scrollPosition <= effectiveOffsetTop + zoneHeight - viewportHeight / 2
     ) {
       const changeInPosition =
         scrollPosition -
-        parentNode.offsetTop -
+        effectiveOffsetTop -
         viewportHeight / 2 +
         div.offsetHeight / 2
       div.style.transform = `translateY(${-changeInPosition}px)`
       div.style.visibility = 'visible'
-    } else if (scrollPosition < parentNode.offsetTop - viewportHeight / 2) {
+    } else if (scrollPosition < effectiveOffsetTop - viewportHeight / 2) {
       div.style.visibility = 'hidden'
     } else if (
-      scrollPosition >
-        parentNode.offsetTop + parentNode.offsetHeight - viewportHeight / 2 &&
+      scrollPosition > effectiveOffsetTop + zoneHeight - viewportHeight / 2 &&
       div !== divs[divs.length - 1]
     ) {
       div.style.transform = 'translateY(0)'

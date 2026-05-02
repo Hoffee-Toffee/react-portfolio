@@ -7,7 +7,7 @@ import { useRef, useEffect } from 'react'
 //   Projected radius = PHYS_RADIUS * F / z
 //   "Screen-normalised" distance: 1 unit = canvas half-width at z = 1
 // ─────────────────────────────────────────────────────────────────────────────
-const POOL = 20000      // total astrophage in cycle
+// POOL is dynamic: W*H/42 — computed at resize time
 const PHYS_RADIUS = 0.04   // world-space radius
 const Z_SPEED = 0.5     // world units / second
 const FLASH_ON_MS = 500     // on  duration (ms)
@@ -175,12 +175,11 @@ export default function Astrophage({ active }: { active: boolean }) {
       back.width = W; back.height = H
       front.width = W; front.height = H
       generateNoise(W, H)
-      if (state.particles.length === 0) {
-        // Initial fill: spread z so the field is already populated on first show
-        state.particles = Array.from({ length: POOL }, () =>
-          spawnParticle(W, H, /* spreadZ */ true),
-        )
-      }
+      // Reinitialise pool on every resize (initial load + window resize)
+      const pool = Math.round(W * H / 42)
+      state.particles = Array.from({ length: pool }, () =>
+        spawnParticle(W, H, /* spreadZ */ true),
+      )
     }
 
     const ro = new ResizeObserver(resize)
