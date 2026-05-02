@@ -258,6 +258,21 @@ html#interestsPage {
     right: 25%;
   }
 
+  #movies-tv .movies-tv-content {
+    position: absolute;
+    inset: 0;
+  }
+
+  #astrophage-back,
+  #astrophage-front {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  #astrophage-back  { z-index: 0; }
+  #astrophage-front { z-index: 2; }
+
   #movies-tv #grace-scale {
     position: absolute;
     width: 100vw;
@@ -267,14 +282,14 @@ html#interestsPage {
     overflow: hidden;
     will-change: scale;
     cursor: pointer;
-    z-index: 0;
+    z-index: 1;
     animation: grace-scale 37s linear infinite;
   }
 
   #movies-tv #grace-overlay {
     position: absolute;
     inset: 0;
-    z-index: 1;
+    z-index: 3;
     pointer-events: none;
     opacity: 0;
 
@@ -287,7 +302,7 @@ html#interestsPage {
     &.white-in {
       background: #fff;
       mix-blend-mode: plus-lighter;
-      opacity: 0.5;
+      opacity: 0.75;
       transition: none;
     }
 
@@ -295,13 +310,20 @@ html#interestsPage {
       background: #fff;
       opacity: 0;
       mix-blend-mode: plus-lighter;
-      transition: opacity 1s ease-out;
+      transition: opacity 1.5s ease-out;
     }
   }
 
   #movies-tv .bg {
-    z-index: 2;
+    z-index: 4;
     pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  #movies-tv .movies-tv-content:has(#grace-overlay.black) .bg,
+  #movies-tv .movies-tv-content.petrova-mode .bg {
+    opacity: 0;
+    transition: none;
   }
 
   #movies-tv #grace-rotate {

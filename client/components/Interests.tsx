@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useEffect, useState, useRef, useCallback } from 'react'
 
 import InterestSection from './InterestSection'
+import Astrophage from './Astrophage'
 import '../styles/interests.scss'
 
 export default function Interests() {
@@ -39,14 +40,15 @@ export default function Interests() {
     // Re-enable after 5 s
     setTimeout(() => {
       cooldownRef.current = false
-    }, 2000)
+    }, 1500)
   }, [])
 
   const interests = [
     <InterestSection
       id="movies-tv"
       content={
-        <div className={petrova ? 'petrova-mode' : undefined}>
+        <div className={`movies-tv-content${petrova ? ' petrova-mode' : ''}`}>
+          <Astrophage active={petrova} />
           <div id="grace-scale" onClick={handleGraceClick}>
             <div id="grace-rotate">
               <div className="fg-img" id="grace" data-parallax="scroll-up" data-parallax-speed="0.2"></div>
