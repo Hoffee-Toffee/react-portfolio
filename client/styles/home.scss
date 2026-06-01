@@ -22,14 +22,27 @@ html#homePage {
 
   main h1 {
     margin: 0;
-    margin-bottom: -0.5em;
+    margin-bottom: 0.5em;
+    text-align: center;
   }
 
   #right-col {
     display: flex;
     flex-direction: column;
     width: 100%;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 1em;
+
+    ul {
+      border: 0.25em solid var(--color-blue);
+      border-radius: 0.5em;
+      padding: 0.5em 1em 0.5em 2em;
+      margin: 0 1em 1.5em 0;
+    }
+  }
+
+  #content > p {
+    margin: 1em 1em;
   }
 
 
@@ -38,18 +51,22 @@ html#homePage {
       position: relative;
     }
 
-    #right-col {
-      width: 100%;
-
-      ul {
-        width: calc(100% - 25vw - 5.5em);
-        align-self: flex-end;
-        margin-right: 0.5em;
-      }
-    }
-
     #me {
       position: absolute;
+    }
+
+    #right-col {
+      width: 100%;
+      padding-left: calc(25vw + 1.5em);
+      box-sizing: border-box;
+
+      ul {
+        width: auto;
+        margin-left: 0.75em;
+        margin-right: 0.5em;
+        margin-bottom: 1.5em;
+        box-sizing: border-box;
+      }
     }
   }
 
@@ -58,8 +75,20 @@ html#homePage {
       display: none;
     }
 
-    #right-col ul {
-      width: 100%;
+    #right-col {
+      padding-left: 0;
+
+      h1 {
+        text-align: center;
+        padding: 0 0.75em;
+      }
+
+      ul {
+        width: calc(100% - 1.5em);
+        align-self: center;
+        margin-left: 0.75em;
+        margin-right: 0.75em;
+      }
     }
   }
 }
