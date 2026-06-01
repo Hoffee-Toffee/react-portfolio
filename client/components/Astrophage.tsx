@@ -22,7 +22,11 @@ const FRONT_THRESHOLD = 4    // origins closer than this → front layer
 const DETAIL_PX = 14             // min projR to draw squiggly outline + spots
 const WOBBLE_N = 12             // number of radial wobble samples
 const WOBBLE_AMP = 0.09           // max fractional radial perturbation
-const BODY_COLOR = 'rgba(255, 200, 200, 0.15)'
+const BODY_COLOR = 'rgba(255, 200, 200, 0.5)'
+
+// Linearly interpolate between two [r,g,b] triples
+const lerpRGB = (a: [number, number, number], b: [number, number, number], t: number): [number, number, number] =>
+  [Math.round(a[0] + (b[0] - a[0]) * t), Math.round(a[1] + (b[1] - a[1]) * t), Math.round(a[2] + (b[2] - a[2]) * t)]
 
 const LENS_FLARE_CHANCE = 1   // fraction of cell-LOD particles that lens-flash
 const LENS_ON_MS = 350    // duration of each lens flare burst
@@ -38,6 +42,7 @@ interface Particle {
   oy: number         // fixed world-space y origin
   dist: number       // screen-normalised origin distance from centre
   z: number          // current depth (increases over time)
+  zFadeOut: number   // depth at which this particle retires (dist-biased random)
   flashPhase: number // ms phase offset within flash period
   axisB: number      // minor-axis ratio relative to projR (major = 1.0)
   tilt: number       // oval rotation (radians)
@@ -76,6 +81,13 @@ function spawnParticle(W: number, H: number, spreadZ = false): Particle {
   const zRetire = (PHYS_RADIUS * F) / RETIRE_PX
   const z = spreadZ ? rnd(zSpawn, zRetire * 0.85) : zSpawn
 
+  // distFrac=0 (center) → power=4 (heavy early-fade bias)
+  // distFrac=1 (edge)   → power=1 (uniform, lives full lifetime)
+  const distFrac = Math.min(dist / OD_MAX, 1)
+  const zFadeOut = zSpawn < zRetire
+    ? zSpawn + (zRetire - zSpawn) * Math.pow(Math.random(), 1 + 3 * (1 - distFrac))
+    : zRetire
+
   const wobble = Array.from({ length: WOBBLE_N }, () => rnd(-1, 1))
   const spotCount = Math.random() < 0.6 ? Math.floor(rnd(1, 4)) : 0
   const spots: Spot[] = Array.from({ length: spotCount }, () => {
@@ -85,9 +97,9 @@ function spawnParticle(W: number, H: number, spreadZ = false): Particle {
   })
 
   return {
-    ox, oy, dist, z,
+    ox, oy, dist, z, zFadeOut,
     flashPhase: rnd(0, FLASH_PERIOD_MS),
-    axisB: rnd(0.72, 0.98),
+    axisB: rnd(0.78, 0.96),
     tilt: rnd(0, Math.PI),
     layer: dist < FRONT_THRESHOLD ? 'front' : 'back',
     wobble,
@@ -97,6 +109,27 @@ function spawnParticle(W: number, H: number, spreadZ = false): Particle {
     lensPeriod: rnd(LENS_PERIOD_MIN, LENS_PERIOD_MAX),
     lensTails: Array.from({ length: Math.floor(rnd(3, 6)) }, () => rnd(0, Math.PI)),
   }
+}
+
+// Spawns a particle already in the steady-state distribution.
+// Origins are weighted by their visible lifetime so near-centre origins
+// (which live much longer) are proportionally more common — matching exactly
+// what the simulation reaches organically after many cycles.
+function spawnSteadyState(W: number, H: number): Particle {
+  const F = W / 2
+  const zRetire = (PHYS_RADIUS * F) / RETIRE_PX
+  for (let attempt = 0; attempt < 200; attempt++) {
+    const p = spawnParticle(W, H, false)   // z = zSpawn
+    const zSpawn = p.z
+    if (zSpawn >= zRetire) continue          // origin never visible; skip
+    if (p.zFadeOut <= zSpawn) continue       // zero-lifetime particle; skip
+    // Accept with probability proportional to this particle's actual lifetime
+    if (Math.random() > (p.zFadeOut - zSpawn) / zRetire) continue
+    p.z = rnd(zSpawn, p.zFadeOut)            // uniform across this particle's visible lifetime
+    return p
+  }
+  // Fallback: if rejection keeps failing just return anything valid
+  return spawnParticle(W, H, true)
 }
 
 // ── Drawing helpers ──────────────────────────────────────────────────────────
@@ -177,9 +210,7 @@ export default function Astrophage({ active }: { active: boolean }) {
       generateNoise(W, H)
       // Reinitialise pool on every resize (initial load + window resize)
       const pool = Math.round(W * H / 42)
-      state.particles = Array.from({ length: pool }, () =>
-        spawnParticle(W, H, /* spreadZ */ true),
-      )
+      state.particles = Array.from({ length: pool }, () => spawnSteadyState(W, H))
     }
 
     const ro = new ResizeObserver(resize)
@@ -222,8 +253,8 @@ export default function Astrophage({ active }: { active: boolean }) {
           alpha = 0
         }
 
-        // Retire: fully off and too small, or far past retire depth (backstop)
-        if ((alpha === 0 && projR < RETIRE_PX) || p.z > zRetire * 2.5) {
+        // Retire: at distance-biased random depth; hard backstop remains
+        if ((alpha === 0 && (projR < RETIRE_PX || p.z > p.zFadeOut)) || p.z > zRetire * 2.5) {
           state.particles[i] = spawnParticle(W, H)
           continue
         }
@@ -238,34 +269,41 @@ export default function Astrophage({ active }: { active: boolean }) {
 
         const ctx = p.layer === 'front' ? ctxF : ctxB
 
+        // Closeness: 0 = very far (small projR), 1 = very close (projR ≥ 200px)
+        const closeness = Math.min(projR / 200, 1)
+        // Far colours (pink/red) → close colours (white)
+        const cInner = lerpRGB([255, 180, 160], [255, 255, 255], closeness)
+        const cMid = lerpRGB([255, 100, 100], [255, 220, 220], closeness)
+        const cOuter = lerpRGB([220, 50, 50], [200, 180, 180], closeness)
+        const cEdge = lerpRGB([160, 10, 5], [140, 120, 120], closeness)
+        const bodyA = 0.30 + closeness * 0.5
+        const bodyRGB = lerpRGB([255, 180, 180], [255, 255, 255], closeness)
+
         if (projR < POINT_PX) {
-          // Near-center particles never use the point LOD — retire and respawn
-          if (p.dist < FRONT_THRESHOLD) {
-            state.particles[i] = spawnParticle(W, H)
-            continue
-          }
-          // ── Point LOD: tiny dot for very distant astrophage ─────────────────
+          // ── Point LOD: tiny oval for very distant astrophage ────────────────
           ctx.save()
           ctx.globalAlpha = alpha
-          ctx.fillStyle = 'rgba(255, 150, 150, 0.5)'
+          ctx.fillStyle = `rgba(${cMid[0]}, ${cMid[1]}, ${cMid[2]}, 0.5)`
+          ctx.translate(sx, sy)
+          ctx.rotate(p.tilt)
           ctx.beginPath()
-          ctx.arc(sx, sy, Math.max(0.5, projR), 0, Math.PI * 2)
+          ctx.ellipse(0, 0, Math.max(0.5, projR), Math.max(0.3, projR * p.axisB), 0, 0, Math.PI * 2)
           ctx.fill()
           ctx.restore()
         } else {
           // ── Oval / Cell LOD ─────────────────────────────────────────────────
           // Smooth radial glow using a gradient ellipse
-          const glowR = projR * 6
+          const glowR = projR * 5
           ctx.save()
           ctx.globalAlpha = alpha
           ctx.translate(sx, sy)
           ctx.rotate(p.tilt)
           ctx.scale(1, p.axisB)
           const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowR)
-          grad.addColorStop(0, 'rgba(255, 230, 230, 0.55)')
-          grad.addColorStop(0.25, 'rgba(255, 160, 160, 0.25)')
-          grad.addColorStop(0.6, 'rgba(220,  60,  40, 0.08)')
-          grad.addColorStop(1, 'rgba(200,  40,  20, 0)')
+          grad.addColorStop(0, `rgba(${cInner[0]}, ${cInner[1]}, ${cInner[2]}, 0.55)`)
+          grad.addColorStop(0.25, `rgba(${cMid[0]},   ${cMid[1]},   ${cMid[2]},   0.30)`)
+          grad.addColorStop(0.6, `rgba(${cOuter[0]}, ${cOuter[1]}, ${cOuter[2]}, 0.10)`)
+          grad.addColorStop(1, `rgba(${cEdge[0]},  ${cEdge[1]},  ${cEdge[2]},  0)`)
           ctx.fillStyle = grad
           ctx.beginPath()
           ctx.arc(0, 0, glowR, 0, Math.PI * 2)
@@ -283,13 +321,13 @@ export default function Astrophage({ active }: { active: boolean }) {
             ctx.beginPath()
             ctx.ellipse(0, 0, projR, projR * p.axisB, 0, 0, Math.PI * 2)
           }
-          ctx.fillStyle = BODY_COLOR
+          ctx.fillStyle = `rgba(${bodyRGB[0]}, ${bodyRGB[1]}, ${bodyRGB[2]}, ${bodyA.toFixed(2)})`
           ctx.fill()
           if (projR >= DETAIL_PX && p.spots.length > 0) {
             buildWobblyPath(ctx, projR, p.axisB, p.wobble)
             ctx.save()
             ctx.clip()
-            ctx.fillStyle = 'rgba(30, 0, 0, 0.1)'
+            ctx.fillStyle = 'rgba(30, 0, 0, 0.15)'
             for (const s of p.spots) {
               ctx.save()
               ctx.translate(s.nx * projR, s.ny * projR * p.axisB)
@@ -359,7 +397,7 @@ export default function Astrophage({ active }: { active: boolean }) {
         for (const c of [ctxB, ctxF]) {
           c.save()
           c.globalCompositeOperation = 'source-atop'
-          c.globalAlpha = 1
+          c.globalAlpha = 0.5
           c.drawImage(noiseCanvas, 0, 0)
           c.restore()
         }

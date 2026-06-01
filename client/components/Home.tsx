@@ -34,13 +34,12 @@ function Home() {
         </div>
 
         <p>
-          I'm studying at <a href="https://devacademy.co.nz/">Dev Academy</a>,
-          New Zealand.
+          I'm currently working at <a href="https://upshift.co.nz/">UpShift</a>, in Nelson, New Zealand.
           <br />
-          For my blog for Dev Academy, see <Link to="/blog">here</Link>.
+          I have been a part of the UpShift team since early 2025, and have been working on a variety of worthwhile projects.
           <br />
-          I'm currently working on a few personal{' '}
-          <Link to="/projects">projects</Link>.
+          <br />
+          You can find more details on this work, and my personal projects <Link to="/projects">here</Link>.
         </p>
 
         <p>
@@ -48,15 +47,10 @@ function Home() {
           <Link to="/interests">interests</Link>.
           <br />
           I love making and designing creative solutions to problems by thinking
-          about them at a fundamental level, it's fun chipping a way at large
+          about them at a fundamental level, it's fun chipping away at large
           problems, exploring the entirety of the problem, and finding cool
           solutions and ideas.
           <br />
-        </p>
-
-        <p>
-          WIP - The rest of this section is currently being re-written. This
-          placeholder text is simply replacing the now outdated information.
         </p>
       </div>
 

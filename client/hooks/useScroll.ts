@@ -43,6 +43,22 @@ const useScroll = () => {
       const footer_opacity = 1 - scrollPositionFromBottom / footerHeight
       footer.style.opacity = Math.max(0, Math.min(footer_opacity, 1))
       footer.style.pointerEvents = footer.style.opacity < 0.5 ? 'none' : 'auto'
+
+      // Movies-TV scroll indicator fade logic
+      if (onInterests) {
+        const snap2 = document.getElementById('movies-tv-snap2')
+        const indicator = document.querySelector(
+          '#movies-tv .scroll-indicator',
+        ) as HTMLElement | null
+        if (snap2 && indicator) {
+          const snap2Top = snap2.offsetTop
+          const fadeStart = snap2Top - window.innerHeight
+          const fadeProgress = (scroll - fadeStart) / window.innerHeight
+          indicator.style.opacity = String(
+            Math.max(0, Math.min(1 - fadeProgress, 1)),
+          )
+        }
+      }
     }
 
     scrollingBody.addEventListener('scroll', handleScroll)

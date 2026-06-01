@@ -34,13 +34,11 @@ export default function Layout() {
                 <Link to="/interests">Interests</Link>
               </li>
               <li>
-                <Link to="/blog">Blog</Link>
-              </li>
-              <li>
                 <Link to="/projects">Projects</Link>
               </li>
             </ul>
           </nav>
+          <label htmlFor="nav-toggle" id="nav-overlay" />
         </header>
       )}
 

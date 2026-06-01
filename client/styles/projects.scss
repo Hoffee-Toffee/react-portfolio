@@ -37,7 +37,7 @@ html#projectsPage {
     min-height: 20em;
     animation:
       fadein 2s,
-      lines 5s linear infinite;
+      var(--holo-animation);
     border-radius: 1em;
     margin-bottom: 2em;
     transition-duration: 0.25s;
@@ -51,8 +51,10 @@ html#projectsPage {
     );
     outline: 2px solid white;
     box-shadow:
-      0 0 20px 10px #000000 inset,
+      var(--holo-shadow),
       0 0 10px 5px #5f9ea050;
+    mix-blend-mode: screen;
+    backdrop-filter: var(--holo-backdrop);
   }
 
   #other .project {

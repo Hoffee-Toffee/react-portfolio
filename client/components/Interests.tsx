@@ -37,6 +37,30 @@ export default function Interests() {
   }, [])
 
   useEffect(() => {
+    document.documentElement.classList.toggle('petrova-mode', petrova)
+  }, [petrova])
+
+  const flashActiveRef = useRef(false)
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('grace-flash', overlay === 'black')
+    const footer = document.querySelector('footer') as HTMLElement | null
+    if (footer) {
+      if (overlay === 'black') {
+        flashActiveRef.current = true
+        footer.style.opacity = '0'
+        footer.style.pointerEvents = 'none'
+      } else if (flashActiveRef.current) {
+        flashActiveRef.current = false
+        footer.style.removeProperty('opacity')
+        footer.style.removeProperty('pointer-events')
+        // Re-trigger useScroll's handler so it recalculates footer opacity immediately
+        document.getElementById('interests')?.dispatchEvent(new Event('scroll'))
+      }
+    }
+  }, [overlay])
+
+  useEffect(() => {
     const interestsEl = document.getElementById('interests')
     if (!interestsEl) return
 
@@ -56,6 +80,58 @@ export default function Interests() {
     interestsEl.addEventListener('scroll', handleScroll)
     return () => interestsEl.removeEventListener('scroll', handleScroll)
   }, [triggerTransition])
+
+  useEffect(() => {
+    const interestsEl = document.getElementById('interests')
+    if (!interestsEl) return
+
+    let isAnimating = false
+
+    const easeInOut = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+
+    const smoothScrollTo = (target: number, duration: number) => {
+      const start = interestsEl.scrollTop
+      const distance = target - start
+      if (distance === 0) return
+      const startTime = performance.now()
+      isAnimating = true
+
+      // Disable snap so it doesn't interrupt the animation
+      interestsEl.style.scrollSnapType = 'none'
+
+      const animate = (now: number) => {
+        const progress = Math.min((now - startTime) / duration, 1)
+        interestsEl.scrollTop = start + distance * easeInOut(progress)
+        if (progress < 1) {
+          requestAnimationFrame(animate)
+        } else {
+          // Re-enable snap after animation completes
+          interestsEl.style.removeProperty('scroll-snap-type')
+          isAnimating = false
+        }
+      }
+      requestAnimationFrame(animate)
+    }
+
+    const handleKeydown = (e: KeyboardEvent) => {
+      let direction = 0
+      if (e.key === 'ArrowDown' || (e.key === ' ' && !e.shiftKey) || e.key === 'PageDown') direction = 1
+      if (e.key === 'ArrowUp' || (e.key === ' ' && e.shiftKey) || e.key === 'PageUp') direction = -1
+      if (direction === 0) return
+
+      e.preventDefault()
+      if (isAnimating) return
+
+      const vh = interestsEl.offsetHeight
+      const maxScroll = interestsEl.scrollHeight - vh
+      const currentSnap = Math.round(interestsEl.scrollTop / vh)
+      const targetScroll = Math.max(0, Math.min((currentSnap + direction) * vh, maxScroll))
+      smoothScrollTo(targetScroll, 900)
+    }
+
+    window.addEventListener('keydown', handleKeydown)
+    return () => window.removeEventListener('keydown', handleKeydown)
+  }, [])
 
   const interests = [
     <InterestSection

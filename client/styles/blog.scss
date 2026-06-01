@@ -243,8 +243,10 @@ a.blog-snippet {
     transparent 2px,
     transparent 4px
   );
-  animation: lines 5s linear infinite;
-  box-shadow: 0 0 20px 10px black inset;
+  animation: var(--holo-animation);
+  box-shadow: var(--holo-shadow);
+  mix-blend-mode: screen;
+  backdrop-filter: var(--holo-backdrop);
   padding: 1em;
   margin: 1.5em 0;
   width: fit-content;
@@ -346,8 +348,10 @@ a.blog-snippet {
     transparent 2px,
     transparent 4px
   );
-  animation: lines 5s linear infinite;
-  box-shadow: 0 0 20px 10px black inset;
+  animation: var(--holo-animation);
+  box-shadow: var(--holo-shadow);
+  mix-blend-mode: screen;
+  backdrop-filter: var(--holo-backdrop);
   padding: 0.75em;
   height: calc(100% - 1em);
   width: calc(90vw - 2em);

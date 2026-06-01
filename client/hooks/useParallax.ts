@@ -166,6 +166,53 @@ const useParallax = () => {
     }
   })
 
+  // ── Grace zone drift (P1 → P2) ──────────────────────────────────────────
+  // Entry parallax is handled by data-parallax="scroll-up" on #grace (translateY).
+  // This translateY drift on #grace-scale compensates for the static sticky background
+  // between P1 and P2. translateY is used (not marginTop) so it is not clipped by
+  // the overflow:hidden on #grace-scale.
+  //
+  // Key design:
+  //   Entry  (localScroll < 0): translateY held at +Amp*VH (Grace pushed below center).
+  //   P1     (localScroll = 0): translateY = +Amp*VH — no jump, Grace is below center.
+  //   P1→P2  (0 → VH):         power-curve drift +Amp*VH → 0 → -Amp*VH (Grace rises).
+  //   Past P2 (localScroll > VH): translateY held at -Amp*VH.
+  //
+  // Grace is centered between P1 & P2 (not at P1, not at P2).
+  //
+  // Tweak GRACE_DRIFT_EXPONENT: 1 = linear, 3 = moderate S-curve, 5+ = very slow through middle.
+  // Tweak GRACE_DRIFT_AMPLITUDE: fraction of viewport height for total travel.
+  const GRACE_DRIFT_EXPONENT = 3
+  const GRACE_DRIFT_AMPLITUDE = 0.1 // 0.1 = ±10dvh (total 20dvh travel)
+
+  const graceScale = scrollBody.querySelector(
+    '#grace-scale',
+  ) as HTMLElement | null
+  const moviesTvZone = scrollBody.querySelector(
+    '#movies-tv-zone',
+  ) as HTMLElement | null
+  if (graceScale && moviesTvZone) {
+    const zoneStart = getScrollOffset(moviesTvZone)
+    const localScroll = scrollPosition - zoneStart
+    let translateYPx: number
+    if (localScroll < 0) {
+      // Entry: hold at the zone-start value so there's no jump at P1
+      translateYPx = GRACE_DRIFT_AMPLITUDE * viewportHeight
+    } else {
+      // Zone P1→P2: power-curve from +Amp (below) → 0 (mid) → -Amp (above)
+      const t = Math.min(localScroll / viewportHeight, 1)
+      const normalized = 2 * t - 1 // -1 at P1, 0 at midpoint, +1 at P2
+      const eased =
+        Math.sign(normalized) *
+        Math.pow(Math.abs(normalized), GRACE_DRIFT_EXPONENT)
+      // eased=-1 at P1 → +Amp (below); eased=+1 at P2 → -Amp (above)
+      translateYPx = -eased * GRACE_DRIFT_AMPLITUDE * viewportHeight
+    }
+    // Preserve any existing transforms on #grace-scale (e.g. from grace-scale animation)
+    // by only replacing/appending our translateY token
+    graceScale.style.transform = `translateY(${translateYPx}px)`
+  }
+
   return null
 }
 
