@@ -2,6 +2,29 @@ import { useEffect } from 'react'
 import { useProjects } from '../hooks/useProjects'
 import '../styles/projects.scss'
 
+const upshiftProjects = [
+  {
+    title: 'KaiWise',
+    slug: 'kaiwise',
+    description: 'Simplifying Food Choices at Scale (Peter Bird, NZ)',
+  },
+  {
+    title: 'dCarbon',
+    slug: 'dcarbon-ekos',
+    description: 'Carbon Analysis, Reporting, & Reduction Software (Ekos, NZ)',
+  },
+  {
+    title: 'Sink Rate App',
+    slug: 'sink-rate-app',
+    description: 'Longline Monitoring App for Seabird Protection (ZebraTech & New Zealand Department of Conservation, NZ)',
+  },
+  {
+    title: 'DiabetesWise',
+    slug: 'diabeteswise',
+    description: 'Digital Tools to Connect People to Diabetes Technology (Stanford University School of Medicine, USA)',
+  },
+]
+
 export default function ProjectsPage() {
   useEffect(() => {
     document.title = 'Tristan Bulmer | Projects'
@@ -48,6 +71,27 @@ export default function ProjectsPage() {
 
   return (
     <>
+      {!isLoading && (
+        <>
+          <h1>Work at UpShift</h1>
+          <div id="upshift" className="projects">
+            {upshiftProjects.map((project) => (
+              <a
+                id={project.slug}
+                key={project.slug}
+                className="project upshift-project"
+                href={`https://upshift.co.nz/work/${project.slug}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+              </a>
+            ))}
+          </div>
+        </>
+      )}
+
       {repos.featured && <h1>Featured Projects</h1>}
 
       <div id="loading-projects" className={isLoading ? 'loading' : 'loaded'}>

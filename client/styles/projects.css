@@ -76,6 +76,33 @@ h1:nth-of-type(2) {
   color: white;
 }
 
+#upshift .project {
+  min-height: 5em;
+  animation: fadein 2s, orange-lines 5s linear infinite;
+  box-shadow: 0 0 20px 10px #000000 inset, 0 0 10px 5px #ff7e0050;
+}
+
+#upshift .project h3 {
+  font-size: 1.5em;
+  margin: 0.5em 0em;
+  color: var(--color-orange-lightest);
+}
+
+#upshift .project h3::after {
+  display: none;
+}
+
+#upshift .project p:empty {
+  /* Hide empty paragraphs so there isn't a gap */
+  display: none;
+}
+
+#upshift .project:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+  color: white;
+}
+
 .project h3 {
   margin: 0;
   padding: 0;
