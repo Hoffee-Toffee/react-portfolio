@@ -49,9 +49,9 @@
     "@types/react-dom": "^18.0.11",
     "@types/superagent": "^4.1.18",
     "@types/supertest": "^2.0.12",
-    "@vitejs/plugin-react": "^6.0.4",
-    "@vitest/coverage-v8": "^4.1.10",
-    "esbuild": "^0.28.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^2.1.8",
+    "esbuild": "^0.24.2",
     "eslint": "^8.10.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
@@ -69,10 +69,10 @@
     "supertest": "^6.2.2",
     "ts-import": "^5.0.0-beta.0",
     "ts-node": "^10.9.2",
-    "tsx": "^4.23.1",
+    "tsx": "^4.19.2",
     "typescript": "^5.1.6",
-    "vite": "^8.1.5",
-    "vitest": "^4.1.10"
+    "vite": "^6.4.3",
+    "vitest": "^2.1.8"
   },
   "prettier": {
     "semi": false,
