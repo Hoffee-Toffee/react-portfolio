@@ -142,20 +142,20 @@ h4 {
 @keyframes orange-lines {
   0% {
     background-position-y: 0px;
-    background-color: rgb(113, 30, 0);
+    background-color: rgb(113, 57, 0);
   }
   25% {
-    background-color: rgb(56, 15, 0);
+    background-color: rgb(56, 28, 0);
   }
   50% {
-    background-color: rgb(113, 30, 0);
+    background-color: rgb(113, 57, 0);
   }
   75% {
-    background-color: rgb(56, 15, 0);
+    background-color: rgb(56, 28, 0);
   }
   100% {
     background-position-y: 16px;
-    background-color: rgb(113, 30, 0);
+    background-color: rgb(113, 57, 0);
   }
 }
 

@@ -146,10 +146,12 @@ html#projectsPage {
   .project p {
     transition: 0.25s;
     padding: 0 1em;
-    height: 2em;
+    min-height: 2em;
     /* Vertical centered text */
     display: flex;
     align-items: center;
+    text-align: center;
+    justify-content: center;
   }
 
   .project img,
